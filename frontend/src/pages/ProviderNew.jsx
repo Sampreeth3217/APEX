@@ -26,7 +26,7 @@ export default function ProviderNew() {
       toast.success('Submitted for review'); setF(init); mine.reload();
     } catch (x) { setErr(x.message); } finally { setBusy(false); }
   };
-  const L = ({ label, req, children }) => <label className="block"><span className="font-semibold">{label}{req && <span className="text-red-700"> *</span>}</span><div className="mt-1.5">{children}</div></label>;
+  const L = ({ label, req, children }) => <label className="block"><span className="font-semibold">{label}{req && <span className="text-danger"> *</span>}</span><div className="mt-1.5">{children}</div></label>;
   return (
     <div className="if-container max-w-2xl py-12">
       <h1 className="text-3xl font-extrabold">List your AI tool</h1>
@@ -48,7 +48,7 @@ export default function ProviderNew() {
         </div>
         <L label="AI features (separate with commas)"><input className="if-input" value={f.ai_features} onChange={set('ai_features')} data-testid="provider-features-input" /></L>
         <L label="Works with (separate with commas)"><input className="if-input" value={f.integrations} onChange={set('integrations')} data-testid="provider-integrations-input" /></L>
-        {err && <p className="font-medium text-red-700" role="alert" data-testid="provider-error">{err}</p>}
+        {err && <p className="font-medium text-danger" role="alert" data-testid="provider-error">{err}</p>}
         <button type="submit" className="if-btn-primary w-full" disabled={busy} data-testid="provider-submit-button">{busy ? 'Submitting…' : 'Submit for review'}</button>
       </form>
       {mine.data?.tools?.length > 0 && (

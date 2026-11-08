@@ -9,7 +9,7 @@ import { Loading, ErrorState, Empty } from '@/components/feedback/States';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ProfileForm } from './Onboarding';
 
-const STATUS = { considering: ['Considering', CircleDashed, 'text-[var(--ink-2)]'], using: ['Using', CheckCircle2, 'text-emerald-700'], dropped: ['Dropped', BookmarkX, 'text-stone-500'] };
+const STATUS = { considering: ['Considering', CircleDashed, 'text-[var(--ink-2)]'], using: ['Using', CheckCircle2, 'text-success'], dropped: ['Dropped', BookmarkX, 'text-ink-3'] };
 
 function useGuard() {
   const { user, loading } = useAuth(); const nav = useNavigate();
@@ -79,7 +79,7 @@ export function Me() {
             {!data.notifications.length && <p className="mt-3 text-[var(--ink-2)]">No alerts yet. If a better tool appears for something you saved, we’ll tell you here (at most once a week).</p>}
             <ul className="mt-3 space-y-3">
               {data.notifications.map((n) => (
-                <li key={n.id} className={`if-card p-4 ${n.read_at ? 'opacity-70' : 'border-indigo-200'}`} data-testid="notification-item">
+                <li key={n.id} className={`if-card p-4 ${n.read_at ? 'opacity-70' : 'border-[var(--brand-ring)]'}`} data-testid="notification-item">
                   <p className="font-medium">{n.reason}</p>
                   <p className="mt-1 text-xs text-[var(--ink-3)]">{new Date(n.created_at).toLocaleString()}</p>
                   <div className="mt-2 flex gap-3 text-sm">{n.tool && <Link to={`/tools/${n.tool.slug}`} className="font-semibold text-[var(--brand)] hover:underline" onClick={() => markRead(n.id)}>See {n.tool.name}</Link>}{!n.read_at && <button type="button" className="text-[var(--ink-2)] hover:underline" onClick={() => markRead(n.id)} data-testid="notification-mark-read">Mark as read</button>}</div>

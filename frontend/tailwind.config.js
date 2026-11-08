@@ -22,6 +22,17 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
+        canvas: 'var(--canvas)',
+        surface: { DEFAULT: 'var(--surface)', 2: 'var(--surface-2)', warm: 'var(--surface-warm)', hover: 'var(--surface-hover)' },
+        ink: { DEFAULT: 'var(--ink)', 2: 'var(--ink-2)', 3: 'var(--ink-3)' },
+        line: { DEFAULT: 'var(--line)', strong: 'var(--line-strong)' },
+        brand: { DEFAULT: 'var(--brand)', hover: 'var(--brand-hover)', soft: 'var(--brand-soft)', strong: 'var(--brand-strong)', on: 'var(--on-brand)' },
+        gold: { DEFAULT: 'var(--gold)', soft: 'var(--gold-soft)' },
+        success: { DEFAULT: 'var(--success)', soft: 'var(--success-soft)', line: 'var(--success-line)' },
+        warning: { DEFAULT: 'var(--warning)', soft: 'var(--warning-soft)', line: 'var(--warning-line)' },
+        danger: { DEFAULT: 'var(--danger)', soft: 'var(--danger-soft)', line: 'var(--danger-line)' },
+        info: { DEFAULT: 'var(--info)', soft: 'var(--info-soft)', line: 'var(--info-line)' },
+        inverse: { DEFAULT: 'var(--inverse)', on: 'var(--on-inverse)', on2: 'var(--on-inverse-2)' },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

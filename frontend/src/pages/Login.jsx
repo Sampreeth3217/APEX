@@ -47,7 +47,7 @@ export default function Login() {
             <input className="if-input mt-1 w-full" type="password" autoComplete={isNew ? 'new-password' : 'current-password'} minLength={isNew ? 8 : undefined} value={form.password} onChange={set('password')} required data-testid="login-password-input" />
             {isNew && <span className="mt-1 block text-xs text-[var(--ink-3)]">At least 8 characters.</span>}
           </label>
-          {error && <p role="alert" className="text-sm font-semibold text-red-700" data-testid="login-error">{error}</p>}
+          {error && <p role="alert" className="text-sm font-semibold text-danger" data-testid="login-error">{error}</p>}
           <button type="submit" disabled={busy} className="if-btn-primary w-full min-h-12 text-base" data-testid="login-submit-button">
             {busy ? 'Please wait…' : isNew ? 'Create account' : 'Sign in'}
           </button>

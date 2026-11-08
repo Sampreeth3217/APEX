@@ -61,7 +61,7 @@ function ToolBrowser({ onAdd, selected, full }) {
         {state.items.map((t) => {
           const isSel = selected.includes(t.slug);
           return (
-            <li key={t.slug} className={`flex items-start justify-between gap-3 rounded-xl border p-3 ${isSel ? 'border-[var(--brand)] bg-[var(--brand-soft)]' : 'border-[var(--line)] bg-white'}`}>
+            <li key={t.slug} className={`flex items-start justify-between gap-3 rounded-xl border p-3 ${isSel ? 'border-[var(--brand)] bg-[var(--brand-soft)]' : 'border-[var(--line)] bg-surface'}`}>
               <div className="min-w-0">
                 <p className="truncate font-semibold">{t.name}</p>
                 <p className="mt-1 flex flex-wrap gap-1"><span className="if-tag">{catLabel(t.category)}</span>{t.has_free_plan && <span className="if-tag">Free plan</span>}</p>
@@ -105,7 +105,7 @@ export default function Compare() {
       <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Side by side</h1>
       <p className="mt-2 text-[var(--ink-2)]">Pick two or three tools. Rows where they differ are highlighted. There is no “winner” — it depends on you.</p>
       <div className="mt-6 flex flex-wrap items-center gap-2" data-testid="compare-selected">
-        {slugs.map((s) => <span key={s} className="if-chip min-h-10 border-[var(--line)] bg-white px-3">{tools.find((t) => t.slug === s)?.name || names.current[s] || s}<button type="button" onClick={() => setSlugs(slugs.filter((x) => x !== s))} aria-label={`Remove ${s}`} data-testid={`compare-remove-${s}`}><X className="h-4 w-4" /></button></span>)}
+        {slugs.map((s) => <span key={s} className="if-chip min-h-10 border-[var(--line)] bg-surface px-3">{tools.find((t) => t.slug === s)?.name || names.current[s] || s}<button type="button" onClick={() => setSlugs(slugs.filter((x) => x !== s))} aria-label={`Remove ${s}`} data-testid={`compare-remove-${s}`}><X className="h-4 w-4" /></button></span>)}
       </div>
       <div className="mt-8">
         {slugs.length < 2 && <Empty title={slugs.length ? 'Add one more tool' : 'Add at least two tools'}>Pick from the list below, or use the Compare button on any recommendation or tool page. <button type="button" className="font-semibold text-[var(--brand)] hover:underline" onClick={() => document.getElementById('compare-browse')?.scrollIntoView({ behavior: 'smooth' })}>Browse tools</button></Empty>}
@@ -118,7 +118,7 @@ export default function Compare() {
                 <thead><tr className="border-b border-[var(--line)]"><th className="w-48 p-4" />{tools.map((t) => <th key={t.slug} className="p-4 font-display text-lg font-bold"><Link to={`/tools/${t.slug}`} className="hover:underline">{t.name}</Link></th>)}</tr></thead>
                 <tbody>
                   {ROWS.map(([label, fn]) => (
-                    <tr key={label} className={`border-b border-[var(--line)] last:border-0 ${differs(fn) ? 'bg-[var(--brand-soft)]/50' : ''}`}>
+                    <tr key={label} className={`border-b border-[var(--line)] last:border-0 ${differs(fn) ? 'bg-[var(--brand-soft)]' : ''}`}>
                       <th scope="row" className="p-4 align-top text-sm font-semibold text-[var(--ink-2)]">{label}{differs(fn) && <span className="block text-xs font-normal text-[var(--brand)]">Differs</span>}</th>
                       {tools.map((t) => <td key={t.slug} className={`p-4 align-top ${fn(t) === 'Not listed' ? 'italic text-[var(--ink-3)]' : ''}`}>{fn(t)}</td>)}
                     </tr>

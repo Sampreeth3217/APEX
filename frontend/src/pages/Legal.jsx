@@ -22,7 +22,7 @@ export function NotFound() {
   usePageTitle('Page not found');
   return (
     <div className="if-container max-w-xl py-20" data-testid="not-found">
-      <p className="font-display text-6xl font-extrabold text-[var(--brand)]/30">404</p>
+      <p className="font-display text-6xl font-extrabold text-[var(--line-strong)]">404</p>
       <h1 className="mt-2 text-3xl font-extrabold">We couldn’t find that page</h1>
       <div className="mt-6 flex gap-2"><Link to="/" className="if-btn-primary">Go home</Link><Link to="/tools" className="if-btn-ghost">Browse tools</Link></div>
     </div>
