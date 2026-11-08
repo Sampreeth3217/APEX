@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 import { AuthProvider, registerNavigate } from '@/lib/auth';
 import { Header, Footer } from '@/components/layout/Shell';
@@ -58,20 +59,22 @@ function AppRouter() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <ChatPersonaProvider>
-          <ScrollTop />
-          <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">Skip to content</a>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main id="main" className="flex-1"><AppRouter /></main>
-            <Footer />
-          </div>
-          <ChatWidget />
-          <Toaster position="top-center" richColors />
-        </ChatPersonaProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem>
+      <BrowserRouter>
+        <AuthProvider>
+          <ChatPersonaProvider>
+            <ScrollTop />
+            <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">Skip to content</a>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main id="main" className="flex-1"><AppRouter /></main>
+              <Footer />
+            </div>
+            <ChatWidget />
+            <Toaster position="top-center" richColors />
+          </ChatPersonaProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

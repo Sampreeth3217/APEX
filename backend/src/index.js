@@ -12,11 +12,35 @@ import actions from './routes/actions.js';
 import admin from './routes/admin.js';
 import chat from './routes/chat.js';
 
+function isLocalDevOrigin(origin) {
+  if (!origin) return false;
+  try {
+    const { hostname } = new URL(origin);
+    return ['localhost', '127.0.0.1', '::1', '[::1]'].includes(hostname);
+  } catch {
+    return false;
+  }
+}
+
 export function createApp() {
   const app = express();
   app.set('trust proxy', true);
   app.disable('x-powered-by');
   app.use(helmet({ contentSecurityPolicy: { directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } }, crossOriginResourcePolicy: { policy: 'same-site' } }));
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && isLocalDevOrigin(origin)) {
+      res.set('Access-Control-Allow-Origin', origin);
+      res.set('Access-Control-Allow-Credentials', 'true');
+      res.set('Vary', 'Origin');
+    }
+    if (req.method === 'OPTIONS') {
+      res.set('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS');
+      res.set('Access-Control-Allow-Headers', req.headers['access-control-request-headers'] || 'Content-Type, Authorization');
+      return res.sendStatus(204);
+    }
+    return next();
+  });
   app.use(express.json({ limit: '64kb' }));
   app.use(cookieParser());
   app.use('/api', originGuard);
