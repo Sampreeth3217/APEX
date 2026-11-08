@@ -3,7 +3,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ThumbsUp, ThumbsDown, FlaskConical, ExternalLink, Bot } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
-import { useAuth, startGoogleLogin } from '@/lib/auth';
+import { useAuth, startLogin } from '@/lib/auth';
 import { usePageTitle } from '@/lib/hooks';
 import { GuideBody } from '@/components/guides/GuideBody';
 import { Loading, ErrorState } from '@/components/feedback/States';
@@ -38,7 +38,7 @@ export default function Guide() {
   if (state.loading) return <div className="if-container max-w-3xl"><Loading label="Writing your setup guide… this can take a few seconds." /></div>;
   if (state.needLogin) return (
     <div className="if-container max-w-xl py-14"><div className="if-card p-8"><h1 className="text-2xl font-extrabold">Get a guide made for you</h1><p className="mt-2 text-[var(--ink-2)]">Sign in so we can match the guide to your comfort with technology and save your progress.</p>
-      <div className="mt-6 flex flex-wrap gap-2"><button type="button" className="if-btn-primary" onClick={() => startGoogleLogin(`/guide/${slug}`)} data-testid="guide-signin-button">Continue with Google</button><Link to={`/tools/${slug}`} className="if-btn-ghost">Back to the tool</Link></div></div></div>
+      <div className="mt-6 flex flex-wrap gap-2"><button type="button" className="if-btn-primary" onClick={() => startLogin(`/guide/${slug}`)} data-testid="guide-signin-button">Sign in to continue</button><Link to={`/tools/${slug}`} className="if-btn-ghost">Back to the tool</Link></div></div></div>
   );
   if (state.error) return <div className="if-container max-w-3xl py-12"><ErrorState error={state.error} /></div>;
   const { guide, tool, tech_level: tech, read_only: readOnly } = state.data;

@@ -4,7 +4,7 @@ import { ExternalLink, AlertTriangle, HelpCircle, ShieldCheck, Check, X, Sparkle
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useApi, useMeta, usePageTitle } from '@/lib/hooks';
-import { useAuth, startGoogleLogin } from '@/lib/auth';
+import { useAuth, startLogin } from '@/lib/auth';
 import { Loading, ErrorState, NotListed } from '@/components/feedback/States';
 
 const CHECK_LABELS = { price: 'Price', rating: 'Customer rating', features: 'Features', integrations: 'Connections', free_plan_flag: 'Free plan known', trial_flag: 'Free trial known', best_for: 'Who it’s for', two_sources: 'Two or more sources' };
@@ -46,7 +46,7 @@ function Comments({ slug, comments, onAdded }) {
           </div>
           <p className="text-xs text-[var(--ink-3)]">Only your first name and business type are shown.</p>
         </form>
-      ) : <button type="button" className="if-btn-ghost mt-4" onClick={() => startGoogleLogin(`/tools/${slug}`)} data-testid="comment-signin-button"><MessageSquare className="h-4 w-4" />Sign in to comment</button>}
+      ) : <button type="button" className="if-btn-ghost mt-4" onClick={() => startLogin(`/tools/${slug}`)} data-testid="comment-signin-button"><MessageSquare className="h-4 w-4" />Sign in to comment</button>}
     </Section>
   );
 }
@@ -63,7 +63,7 @@ export default function ToolDetail() {
   const cat = meta?.categories.find((c) => c.slug === t.category);
   const est = t.enrichment ? <span className="if-chip ml-2 border-indigo-200 bg-indigo-50 text-xs text-indigo-800"><Sparkles className="h-3 w-3" />Estimated</span> : null;
   const save = async () => {
-    if (!user) return startGoogleLogin(`/tools/${slug}`);
+    if (!user) return startLogin(`/tools/${slug}`);
     try { await api('/user-tools', { method: 'POST', body: { slug, status: 'considering' } }); toast.success('Saved to My tools'); } catch (e) { toast.error(e.message); }
   };
   return (

@@ -9,6 +9,7 @@ if (!url) { console.error('SUPABASE_DB_URL is not set'); process.exit(1); }
 const files = [
   ['001_005_idea_foundry_v2.sql', new URL('../supabase/source/idea_foundry_migrations_v2.sql', import.meta.url)],
   ['006_app_additions.sql', new URL('../supabase/migrations/006_app_additions.sql', import.meta.url)],
+  ['007_local_auth.sql', new URL('../supabase/migrations/007_local_auth.sql', import.meta.url)],
 ];
 
 const client = new pg.Client({ connectionString: url, ssl: { rejectUnauthorized: false } });

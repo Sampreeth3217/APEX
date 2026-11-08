@@ -1,5 +1,5 @@
 -- 006_app_additions.sql — additive only.
--- Why: sign-in uses Emergent-managed Google login (not Supabase Auth sessions), so the server keeps
+-- Why: sign-in is handled by the app itself (see 007_local_auth.sql) (not Supabase Auth sessions), so the server keeps
 -- its own hashed session table. Approval audit fields + admin audit log support the admin requirements.
 create table if not exists app_sessions (
   token_hash text primary key,

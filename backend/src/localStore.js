@@ -5,7 +5,7 @@ import { MongoClient } from 'mongodb';
 // Used only while the Supabase tables are not yet created (see /api/healthz "database").
 const PK = {
   tools: ['slug'], users: ['id'], consents: ['user_id', 'channel'], user_tools: ['user_id', 'tool_id'], guides: ['tool_id', 'tech_level', 'tool_version'],
-  guide_progress: ['user_id', 'tool_id'], llm_cache: ['cache_key'], demo_personas: ['slug'], app_sessions: ['token_hash'],
+  guide_progress: ['user_id', 'tool_id'], llm_cache: ['cache_key'], demo_personas: ['slug'], app_sessions: ['token_hash'], app_credentials: ['user_id'],
 };
 const now = () => new Date().toISOString();
 const uid = () => crypto.randomUUID();

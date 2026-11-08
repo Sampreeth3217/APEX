@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, LogOut, Bookmark, Settings, Shield, Store } from 'lucide-react';
-import { useAuth, startGoogleLogin } from '@/lib/auth';
+import { useAuth, startLogin } from '@/lib/auth';
 
 export const Logo = () => (
   <Link to="/" className="flex items-center gap-2.5" data-testid="header-logo-link">
@@ -42,7 +42,7 @@ export function Header() {
             </>
           ) : (
             <>
-              <button type="button" onClick={() => startGoogleLogin('/dashboard')} className="if-btn-quiet" data-testid="nav-signin-button">Sign in</button>
+              <button type="button" onClick={() => startLogin('/dashboard')} className="if-btn-quiet" data-testid="nav-signin-button">Sign in</button>
               <Link to="/start" className="if-btn-primary min-h-11" data-testid="nav-start-button">Find AI for my business</Link>
             </>
           )}
@@ -66,7 +66,7 @@ export function Header() {
             ) : (
               <>
                 <Link to="/start" className="if-btn-primary mt-2">Find AI for my business</Link>
-                <button type="button" onClick={() => startGoogleLogin('/dashboard')} className="if-btn-ghost">Sign in</button>
+                <button type="button" onClick={() => startLogin('/dashboard')} className="if-btn-ghost">Sign in</button>
               </>
             )}
           </div>

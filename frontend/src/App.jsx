@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { AuthProvider } from '@/lib/auth';
+import { AuthProvider, registerNavigate } from '@/lib/auth';
 import { Header, Footer } from '@/components/layout/Shell';
 import { ChatWidget, ChatPersonaProvider } from '@/components/chat/ChatWidget';
 import Landing from '@/pages/Landing';
@@ -27,8 +27,8 @@ function ScrollTop() {
 }
 
 function AppRouter() {
-  const location = useLocation();
-  if (location.hash?.includes('session_id=')) return <AuthContinue />;
+  const nav = useNavigate();
+  useEffect(() => { registerNavigate(nav); }, [nav]);
   return (
     <Routes>
       <Route path="/" element={<Landing />} />

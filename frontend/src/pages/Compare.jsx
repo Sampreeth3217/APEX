@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, Check } from 'lucide-react';
 import { api } from '@/lib/api';
-import { usePageTitle } from '@/lib/hooks';
+import { usePageTitle, useMeta } from '@/lib/hooks';
 import { Loading, ErrorState, Empty } from '@/components/feedback/States';
 
 const val = (v) => (v === true ? 'Yes' : v === false ? 'No' : 'Not listed');
@@ -19,18 +19,67 @@ const ROWS = [
   ['Unknowns', (t) => (t.unknowns?.length ? t.unknowns.join(', ') : 'None listed')],
 ];
 
-function Picker({ onAdd, exclude }) {
-  const [q, setQ] = useState(''); const [items, setItems] = useState([]);
-  useEffect(() => { if (q.length < 2) { setItems([]); return undefined; } const h = setTimeout(() => api(`/tools?q=${encodeURIComponent(q)}&limit=6`).then((d) => setItems(d.items)).catch(() => {}), 250); return () => clearTimeout(h); }, [q]);
+// Browsable tool list right on the Compare page: search, filter by type, and add with one click.
+function ToolBrowser({ onAdd, selected, full }) {
+  const meta = useMeta();
+  const [q, setQ] = useState('');
+  const [category, setCategory] = useState('');
+  const [state, setState] = useState({ items: [], total: 0, loading: true });
+  const [offset, setOffset] = useState(0);
+  const PAGE = 24;
+  useEffect(() => {
+    let live = true;
+    const h = setTimeout(() => {
+      setState((s) => ({ ...s, loading: true }));
+      const params = new URLSearchParams({ limit: String(PAGE), offset: String(offset), sort: q.trim() ? 'relevance' : 'evidence' });
+      if (q.trim().length >= 2) params.set('q', q.trim());
+      if (category) params.set('category', category);
+      api(`/tools?${params}`).then((d) => { if (live) setState((s) => ({ items: offset ? [...s.items, ...d.items] : d.items, total: d.total, loading: false })); })
+        .catch((e) => { if (live) setState((s) => ({ ...s, loading: false, error: e })); });
+    }, 200);
+    return () => { live = false; clearTimeout(h); };
+  }, [q, category, offset]);
+  useEffect(() => { setOffset(0); }, [q, category]);
+  const catLabel = (slug) => meta?.categories?.find((c) => c.slug === slug)?.label || slug;
   return (
-    <div className="relative max-w-md">
-      <input className="if-input" placeholder="Add a tool by name…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Add a tool to compare" data-testid="compare-add-input" />
-      {items.length > 0 && (
-        <ul className="if-card absolute z-10 mt-1 w-full overflow-hidden" role="listbox">
-          {items.filter((i) => !exclude.includes(i.slug)).map((i) => <li key={i.slug}><button type="button" className="flex w-full items-center gap-2 px-4 py-3 text-left hover:bg-[var(--surface-hover)]" onClick={() => { onAdd(i.slug); setQ(''); }} data-testid={`compare-add-option-${i.slug}`}><Plus className="h-4 w-4" />{i.name}</button></li>)}
-        </ul>
+    <section id="compare-browse" className="if-card p-5 sm:p-6" data-testid="compare-browser">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="font-display text-lg font-bold">All tools</h2>
+          <p className="if-caption text-sm text-[var(--ink-2)]">{full ? 'You have 3 tools selected. Remove one to add another.' : 'Search or filter, then press Add.'}</p>
+        </div>
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+          <input className="if-input min-w-0 flex-1 sm:w-64" placeholder="Search tools…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search tools to compare" data-testid="compare-add-input" />
+          <select className="if-input w-auto" value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Filter by type" data-testid="compare-category-filter">
+            <option value="">All types</option>
+            {(meta?.categories || []).map((c) => <option key={c.slug} value={c.slug}>{c.label}</option>)}
+          </select>
+        </div>
+      </div>
+      {state.error && <div className="mt-4"><ErrorState error={state.error} /></div>}
+      <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" data-testid="compare-browser-list">
+        {state.items.map((t) => {
+          const isSel = selected.includes(t.slug);
+          return (
+            <li key={t.slug} className={`flex items-start justify-between gap-3 rounded-xl border p-3 ${isSel ? 'border-[var(--brand)] bg-[var(--brand-soft)]' : 'border-[var(--line)] bg-white'}`}>
+              <div className="min-w-0">
+                <p className="truncate font-semibold">{t.name}</p>
+                <p className="mt-1 flex flex-wrap gap-1"><span className="if-tag">{catLabel(t.category)}</span>{t.has_free_plan && <span className="if-tag">Free plan</span>}</p>
+                <p className="if-caption mt-1 text-xs text-[var(--ink-3)]">{t.price_text}</p>
+              </div>
+              <button type="button" disabled={isSel || full} onClick={() => onAdd(t.slug, t.name)} className="if-btn-ghost min-h-9 shrink-0 px-3 text-sm disabled:opacity-50" data-testid={`compare-add-option-${t.slug}`}>
+                {isSel ? <><Check className="h-4 w-4" />Added</> : <><Plus className="h-4 w-4" />Add</>}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {state.loading && <Loading />}
+      {!state.loading && !state.items.length && !state.error && <p className="mt-4 text-[var(--ink-2)]">No tools match. Try a different word or type.</p>}
+      {!state.loading && state.items.length < state.total && (
+        <button type="button" className="if-btn-quiet mt-4" onClick={() => setOffset(state.items.length)} data-testid="compare-browser-more">Show more ({state.total - state.items.length} left)</button>
       )}
-    </div>
+    </section>
   );
 }
 
@@ -40,6 +89,7 @@ export default function Compare() {
   const slugs = (sp.get('tools') || '').split(',').filter(Boolean).slice(0, 3);
   const [state, setState] = useState({ loading: false });
   const key = slugs.join(',');
+  const names = useRef({});
   useEffect(() => {
     if (slugs.length < 2) { setState({ loading: false }); return; }
     setState({ loading: true });
@@ -55,11 +105,10 @@ export default function Compare() {
       <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Side by side</h1>
       <p className="mt-2 text-[var(--ink-2)]">Pick two or three tools. Rows where they differ are highlighted. There is no “winner” — it depends on you.</p>
       <div className="mt-6 flex flex-wrap items-center gap-2" data-testid="compare-selected">
-        {slugs.map((s) => <span key={s} className="if-chip min-h-10 border-[var(--line)] bg-white px-3">{tools.find((t) => t.slug === s)?.name || s}<button type="button" onClick={() => setSlugs(slugs.filter((x) => x !== s))} aria-label={`Remove ${s}`} data-testid={`compare-remove-${s}`}><X className="h-4 w-4" /></button></span>)}
+        {slugs.map((s) => <span key={s} className="if-chip min-h-10 border-[var(--line)] bg-white px-3">{tools.find((t) => t.slug === s)?.name || names.current[s] || s}<button type="button" onClick={() => setSlugs(slugs.filter((x) => x !== s))} aria-label={`Remove ${s}`} data-testid={`compare-remove-${s}`}><X className="h-4 w-4" /></button></span>)}
       </div>
-      {slugs.length < 3 && <div className="mt-4"><Picker exclude={slugs} onAdd={(s) => setSlugs([...slugs, s])} /></div>}
       <div className="mt-8">
-        {slugs.length < 2 && <Empty title="Add at least two tools">Search above, or use the Compare button on any recommendation or tool page. <Link className="font-semibold text-[var(--brand)] hover:underline" to="/tools">Browse tools</Link></Empty>}
+        {slugs.length < 2 && <Empty title={slugs.length ? 'Add one more tool' : 'Add at least two tools'}>Pick from the list below, or use the Compare button on any recommendation or tool page. <button type="button" className="font-semibold text-[var(--brand)] hover:underline" onClick={() => document.getElementById('compare-browse')?.scrollIntoView({ behavior: 'smooth' })}>Browse tools</button></Empty>}
         {state.loading && <Loading />}
         {state.error && <ErrorState error={state.error} />}
         {tools.length >= 2 && (
@@ -85,6 +134,7 @@ export default function Compare() {
           </>
         )}
       </div>
+      <div className="mt-8"><ToolBrowser selected={slugs} full={slugs.length >= 3} onAdd={(s, name) => { names.current[s] = name; setSlugs([...slugs, s]); }} /></div>
     </div>
   );
 }

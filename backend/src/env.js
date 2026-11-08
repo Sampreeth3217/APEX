@@ -27,8 +27,8 @@ const schema = z.object({
 export const env = schema.parse(process.env);
 // The owner asked us to pick the models ("whatever is best"); any value that is not a model id falls back to these.
 const isModelId = (v) => !!v && /^[~\w.-]+\/[\w.:-]+$/.test(v);
-env.LLM_MODEL_CHEAP = isModelId(env.LLM_MODEL_CHEAP) ? env.LLM_MODEL_CHEAP : process.env.LLM_DEFAULT_MODEL_CHEAP;
-env.LLM_MODEL_MID = isModelId(env.LLM_MODEL_MID) ? env.LLM_MODEL_MID : process.env.LLM_DEFAULT_MODEL_MID;
+env.LLM_MODEL_CHEAP = isModelId(env.LLM_MODEL_CHEAP) ? env.LLM_MODEL_CHEAP : (process.env.LLM_DEFAULT_MODEL_CHEAP || 'anthropic/claude-haiku-5.5');
+env.LLM_MODEL_MID = isModelId(env.LLM_MODEL_MID) ? env.LLM_MODEL_MID : (process.env.LLM_DEFAULT_MODEL_MID || 'anthropic/claude-sonnet-5.5');
 export const adminEmails = env.ADMIN_EMAILS.split(',').map((e) => e.trim().toLowerCase()).filter(Boolean);
 export const dbConfigured = () => !!(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY);
 export const llmConfigured = () => !!(env.OPENROUTER_API_KEY && env.LLM_MODEL_CHEAP && env.LLM_MODEL_MID) && env.LLM_DISABLED !== 'true';

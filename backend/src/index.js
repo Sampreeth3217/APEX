@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'node:url';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -31,6 +32,6 @@ export function createApp() {
   return app;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  createApp().listen(env.PORT, '127.0.0.1', () => console.log(`idea-foundry api on ${env.PORT}`));
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  createApp().listen(env.PORT, '127.0.0.1', () => console.log(`APEX api on ${env.PORT}`));
 }

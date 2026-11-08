@@ -9,6 +9,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Ranade', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Ranade', 'Inter', 'sans-serif'],
+        caption: ['Inter', 'system-ui', 'sans-serif'],
+        highlight: ['Poppins', 'Inter', 'sans-serif'],
+        label: ['"Libre Baskerville"', 'Georgia', 'serif'],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

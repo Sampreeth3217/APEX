@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useMeta, usePageTitle } from '@/lib/hooks';
 import { loadAnswers, saveAnswers, emptyAnswers } from '@/lib/answers';
-import { useAuth, startGoogleLogin } from '@/lib/auth';
+import { useAuth, startLogin } from '@/lib/auth';
 import { Loading } from '@/components/feedback/States';
 
 const TEAM = [['just_me', 'Just me'], ['2-9', '2–9 people'], ['10-49', '10–49 people']];
@@ -25,8 +25,10 @@ export default function Start() {
   const meta = useMeta();
   const nav = useNavigate();
   const { user } = useAuth();
-  const [a, setA] = useState(loadAnswers);
-  const [error, setError] = useState('');
+  const location = useLocation();
+  const back = location.state;
+  const [a, setA] = useState(() => (back?.step != null ? { ...loadAnswers(), step: back.step, completed: false } : loadAnswers()));
+  const [error, setError] = useState(back?.error || '');
   useEffect(() => { saveAnswers(a); }, [a]);
   const set = (patch) => { setError(''); setA((x) => ({ ...x, ...patch })); };
   const toggle = (key, v, max) => {
@@ -70,7 +72,7 @@ export default function Start() {
       <div className="grid gap-2 sm:grid-cols-3">{URG.map(([k, l]) => <Choice key={k} selected={a.urgency === k} onClick={() => set({ urgency: k })} testid={`q8-urgency-${k}`}>{l}</Choice>)}</div>) },
     { q: 'What matters most?', valid: !!a.priority, body: (
       <div className="grid gap-2 sm:grid-cols-2">{PRI.map(([k, l]) => <Choice key={k} selected={a.priority === k} onClick={() => set({ priority: k })} testid={`q9-priority-${k}`}>{l}</Choice>)}</div>) },
-    { q: 'Anything else we should know?', hint: 'Optional.', valid: true, body: (
+    { q: a.something_else ? 'Tell us about your “something else”' : 'Anything else we should know?', hint: a.something_else ? (a.needs.length ? 'Describe the other headache in a few words.' : 'Required — describe the headache in a few words, e.g. “answering calls after hours” or “chasing unpaid invoices”.') : 'Optional.', valid: !a.something_else || a.needs.length > 0 || a.free_text.trim().length >= 3, body: (
       <div><textarea className="if-input min-h-36 py-3" maxLength={1000} value={a.free_text} onChange={(e) => set({ free_text: e.target.value })} placeholder="For example: we close at 6pm but customers call until 9pm." data-testid="q10-free-text" aria-label="Anything else we should know" /><p className="mt-1 text-right text-xs text-[var(--ink-3)]">{a.free_text.length}/1000</p></div>) },
   ];
 
@@ -84,12 +86,12 @@ export default function Start() {
     set({ step: n });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  const next = () => (step.valid ? move(1) : setError(i === 1 ? 'Pick at least one headache.' : 'Please choose an answer to continue.'));
+  const next = () => (step.valid ? move(1) : setError(i === 1 ? 'Pick at least one headache.' : i === steps.length - 1 ? 'Please describe your other headache in a few words so we can match it.' : 'Please choose an answer to continue.'));
   const finish = () => {
     saveAnswers({ ...a, completed: true });
     sessionStorage.setItem('if_submit_answers', '1');
     if (user) nav(user.onboarding_complete ? '/auth/continue' : '/onboarding');
-    else startGoogleLogin('/auth/continue');
+    else startLogin('/auth/continue');
   };
   const pct = Math.round(((i + 1) / steps.length) * 100);
 

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { db, q, liveTools } from '../db.js';
 import { requireAuth } from '../security/auth.js';
 import { limit } from '../security/rateLimit.js';
-import { mapAnswers } from '../features/profile.js';
+import { mapAnswers, inferNeeds, inferNeedsFromCatalog } from '../features/profile.js';
 import { profileSummary } from '../llm/tasks.js';
 import { buildResults, shapePick } from '../features/recommendations.js';
 import { rank } from '../scoring/rank.js';
@@ -15,10 +15,13 @@ r.post('/profile', requireAuth, limit('write'), async (req, res) => {
   try { mapped = mapAnswers(req.body?.answers); } catch (e) { return res.status(400).json({ error: e.issues?.[0]?.message || 'Please check your answers.' }); }
   const { answers, profile } = mapped;
   const s = await profileSummary(answers, profile, req.user.id);
-  if (answers.something_else && s.extra_needs?.length) {
-    for (const n of s.extra_needs) if (profile.primary_needs.length < 2 && !profile.primary_needs.includes(n)) { profile.primary_needs.push(n); profile.hours_per_week[n] = 3; }
+  if (answers.something_else) {
+    // AI suggestion first, then plain keyword matching, then a catalog search on the owner's own words.
+    let extra = [...(s.extra_needs || []), ...inferNeeds(answers.free_text)];
+    if (!extra.length && !profile.primary_needs.length) extra = inferNeedsFromCatalog(answers.free_text, await liveTools());
+    for (const n of extra) if (profile.primary_needs.length < 2 && !profile.primary_needs.includes(n)) { profile.primary_needs.push(n); profile.hours_per_week[n] = 3; }
   }
-  if (!profile.primary_needs.length) return res.status(400).json({ error: 'We could not tell which area you need help with. Please pick one of the listed headaches.', field: 'needs' });
+  if (!profile.primary_needs.length) return res.status(400).json({ error: 'We could not match what you wrote to a type of tool. Add a few more words in the last question (for example “answering calls” or “sending invoices”), or tick one of the listed headaches.', field: 'needs' });
   profile.summary = s.summary;
   const cur = await q(db().from('profiles').select('id,version').eq('user_id', req.user.id).eq('is_current', true).maybeSingle());
   if (cur) await q(db().from('profiles').update({ is_current: false }).eq('id', cur.id));

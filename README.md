@@ -1,34 +1,55 @@
-# Idea Foundry
+# APEX
 
 Find the right AI tools for your business — without wasting time or money.
 
 ## Stack (all JavaScript)
-- **Frontend:** React 19 + Vite, Tailwind, shadcn/ui primitives, Lucide icons — `/app/frontend`
-- **API:** Node.js 24 + Express 5, Zod validation, Papa Parse — `/app/backend/src`
-- **Data:** your Supabase Postgres (canonical migration applied unchanged + additive `006_app_additions.sql`), accessed server-side only with the service-role key. RLS stays enabled on every table; the browser never talks to Supabase.
-- **Sign-in:** Emergent-managed Google login. On first sign-in the server creates the Supabase auth user, the canonical `handle_new_user` trigger creates `public.users`, and a hashed session is stored in `app_sessions`.
+- **Frontend:** React 19 + Vite, Tailwind, shadcn/ui primitives, Lucide icons — `frontend/`
+- **API:** Node.js 22+ + Express 5, Zod validation, Papa Parse — `backend/src`
+- **Data:** your Supabase Postgres, accessed server-side only with the service-role key. RLS stays enabled on every table; the browser never talks to Supabase.
+- **Sign-in:** built-in email + password. Passwords are hashed with scrypt in `app_credentials` (migration `007_local_auth.sql`); sessions are hashed tokens in `app_sessions`, sent as an httpOnly cookie.
 - **AI:** OpenRouter via the OpenAI-compatible client, one wrapper `src/llm/call.js` (cache, budget guard, telemetry, retry-once, fallbacks).
-- `backend/server.py` is only a launcher: the platform supervisor runs uvicorn on :8001, so it starts the Node API (:8002) and forwards requests to it unchanged.
+- No Emergent services, scripts, packages or launchers are used.
+
+## Run it locally
+Needs Node.js 22 or newer.
+
+```bash
+# 1. Configure the API
+cp backend/.env.example backend/.env      # Windows: copy backend\.env.example backend\.env
+#    then fill in SUPABASE_*, OPENROUTER_API_KEY, ADMIN_EMAILS
+
+# 2. Install everything (root helper + backend + frontend)
+npm install
+npm run install:all
+
+# 3. Create tables (first time only; also adds the new app_credentials table) and load the catalog
+npm run migrate
+npm run seed
+
+# 4. Start API (:8002) and web app (:3000) together
+npm run dev
+```
+Open http://localhost:3000 and use **Create an account**. Accounts whose email is in `ADMIN_EMAILS` get the admin pages.
+The Vite dev server proxies `/api` to `http://127.0.0.1:8002`, so the browser only ever talks to localhost:3000.
 
 ## Environment (backend)
-`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL` (session pooler string, used only by `yarn migrate`), `OPENROUTER_API_KEY`, `LLM_MODEL_CHEAP`, `LLM_MODEL_MID`, `EMBED_MODEL=none`, `LLM_DAILY_BUDGET_USD=3`, `LLM_TOTAL_BUDGET_USD=20`, `CRON_SECRET`, `ADMIN_EMAILS`, `DEMO_MODE`.
-Model choice: the owner asked us to pick; if `LLM_MODEL_*` is not a model id, `LLM_DEFAULT_MODEL_CHEAP=anthropic/claude-haiku-5.5` and `LLM_DEFAULT_MODEL_MID=anthropic/claude-sonnet-5.5` are used. Cheap tier runs with thinking off; mid tier gets a fixed 1,024-token thinking budget.
-If Supabase tables are missing, the API reports `database: local_fallback` on `/api/healthz` and uses local storage until `yarn migrate` is run.
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL` (session pooler string, used only by `npm run migrate`), `OPENROUTER_API_KEY`, `LLM_MODEL_CHEAP`, `LLM_MODEL_MID`, `EMBED_MODEL=none`, `LLM_DAILY_BUDGET_USD=3`, `LLM_TOTAL_BUDGET_USD=20`, `CRON_SECRET`, `ADMIN_EMAILS`, `DEMO_MODE`, optional `LLM_DISABLED=true`, optional `COOKIE_SECURE=true` (set when serving over HTTPS).
+If `LLM_MODEL_*` is not a model id, `anthropic/claude-haiku-5.5` and `anthropic/claude-sonnet-5.5` are used.
 
-## Commands (in `/app/backend`)
+## Commands (in `backend/`, run with `npm run <name>`)
 | Command | What it does |
 |---|---|
-| `yarn migrate` | Applies `supabase/source/idea_foundry_migrations_v2.sql` (skipped if tables exist) and `006_app_additions.sql`, once each |
-| `yarn seed:dry` / `yarn seed` | Parse report / idempotent upsert by slug |
-| `yarn enrich` | One `enrich` call per tool not yet at the current `PROMPT_VERSION` |
-| `yarn demo:generate` | Rebuilds the 3 sample businesses + their setup guides |
-| `yarn test` | Vitest unit suite (parsing, scoring, gates, ETA, profile, LLM guards) |
-| `yarn eval` | Engine vs stars-only vs fit-only on the sample personas |
+| `npm run migrate` | Applies `supabase/source/idea_foundry_migrations_v2.sql` (skipped if tables exist) , `006_app_additions.sql` and `007_local_auth.sql`, once each |
+| `npm run seed:dry` / `npm run seed` | Parse report / idempotent upsert by slug |
+| `npm run enrich` | One `enrich` call per tool not yet at the current `PROMPT_VERSION` |
+| `npm run demo:generate` | Rebuilds the 3 sample businesses + their setup guides |
+| `npm run test` | Vitest unit suite (parsing, scoring, gates, ETA, profile, LLM guards) |
+| `npm run eval` | Engine vs stars-only vs fit-only on the sample personas |
 
 ## Seed report (actual)
 86 tools · 51 with parsed prices · 22 with numeric ratings · 11 price conflicts — matches the design. 28 tools have only company/competitor-written sources.
 
-## Baseline comparison (`yarn eval`)
+## Baseline comparison (`npm run eval`)
 | Persona | Engine | Stars-only | Fit-only |
 |---|---|---|---|
 | Salon | Acuity Scheduling, Setmore/Zeeg, Goodcall | Smith.ai, Goodcall, Rosie AI | Goodcall, Dialzara, AIRA |

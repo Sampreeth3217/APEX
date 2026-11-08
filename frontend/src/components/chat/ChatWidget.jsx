@@ -66,7 +66,7 @@ export function ChatWidget() {
               </div>
             ))}
             {extra?.links && <div className="flex flex-wrap gap-2">{extra.links.map((l) => <Link key={l.href} to={l.href} className="if-chip border-[var(--line)] bg-white" onClick={() => setOpen(false)}>{l.label}</Link>)}</div>}
-            {extra?.refresh && user && <button type="button" className="if-btn-primary min-h-11 w-full" onClick={() => { setOpen(false); nav('/dashboard'); setTimeout(() => window.location.reload(), 50); }} data-testid="chat-refresh-results-button">Refresh my results</button>}
+            {extra?.refresh && user && <button type="button" className="if-btn-primary min-h-11 w-full" onClick={() => { setOpen(false); nav('/dashboard', { state: { refresh: Date.now() } }); }} data-testid="chat-refresh-results-button">Refresh my results</button>}
             <div ref={endRef} />
           </div>
           <form onSubmit={send} className="flex gap-2 border-t border-[var(--line)] p-3">

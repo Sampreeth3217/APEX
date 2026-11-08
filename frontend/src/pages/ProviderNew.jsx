@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
-import { useAuth, startGoogleLogin } from '@/lib/auth';
+import { useAuth, startLogin } from '@/lib/auth';
 import { useApi, useMeta, usePageTitle } from '@/lib/hooks';
 
 const init = { name: '', category: '', best_for: '', summary: '', website_url: '', help_url: '', contact_email: '', pricing_notes: '', has_free_plan: null, has_free_trial: null, ai_features: '', integrations: '' };
@@ -16,7 +16,7 @@ export default function ProviderNew() {
   const [f, setF] = useState(init); const [err, setErr] = useState(''); const [busy, setBusy] = useState(false);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   if (!user) return (
-    <div className="if-container max-w-xl py-14"><div className="if-card p-8"><h1 className="text-2xl font-extrabold">List your AI tool</h1><p className="mt-2 text-[var(--ink-2)]">Sign in to submit a listing. Every listing is reviewed by our team before it appears.</p><button type="button" className="if-btn-primary mt-6" onClick={() => startGoogleLogin('/providers/new')} data-testid="provider-signin-button">Continue with Google</button></div></div>
+    <div className="if-container max-w-xl py-14"><div className="if-card p-8"><h1 className="text-2xl font-extrabold">List your AI tool</h1><p className="mt-2 text-[var(--ink-2)]">Sign in to submit a listing. Every listing is reviewed by our team before it appears.</p><button type="button" className="if-btn-primary mt-6" onClick={() => startLogin('/providers/new')} data-testid="provider-signin-button">Sign in to continue</button></div></div>
   );
   const submit = async (e) => {
     e.preventDefault(); setErr(''); setBusy(true);

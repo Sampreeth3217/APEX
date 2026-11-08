@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RefreshCw, PencilLine } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
@@ -22,6 +22,8 @@ export default function Dashboard() {
   usePageTitle('My results');
   const { user, loading: authLoading } = useAuth();
   const nav = useNavigate();
+  const location = useLocation();
+  const forceKey = location.state?.refresh;
   const [state, setState] = useState({ loading: true });
   const { saved, save } = useSavedSlugs(!!user);
 
@@ -41,8 +43,9 @@ export default function Dashboard() {
     if (authLoading) return;
     if (!user) { nav('/login', { replace: true }); return; }
     if (!user.onboarding_complete) { nav('/onboarding', { replace: true }); return; }
-    load(false);
-  }, [authLoading, user, nav, load]);
+    load(!!forceKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, user?.id, user?.onboarding_complete, nav, load, forceKey]);
 
   const changeAnswers = async () => {
     try {
