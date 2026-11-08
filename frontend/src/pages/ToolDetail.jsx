@@ -68,7 +68,7 @@ export default function ToolDetail() {
   };
   return (
     <div className="if-container py-10 sm:py-14">
-      <Link to="/tools" className="text-sm text-[var(--ink-2)] hover:underline">← Marketplace</Link>
+      <Link to="/tools" className="-ml-1 inline-flex min-h-11 items-center rounded-lg px-1 text-sm text-[var(--ink-2)] hover:underline">← Marketplace</Link>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-6">
         <div className="max-w-2xl">
           <p className="if-eyebrow">{cat?.label}</p>
@@ -128,7 +128,7 @@ export default function ToolDetail() {
             <ul className="space-y-3">
               {t.sources.map((s) => (
                 <li key={s.url} className="text-sm">
-                  <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" className="inline-flex items-center gap-1 break-all font-medium text-[var(--brand)] hover:underline">{new URL(s.url.replace(/\s/g, '%20')).hostname.replace('www.', '')}<ExternalLink className="h-3.5 w-3.5 shrink-0" /></a>
+                  <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" className="inline-flex min-h-10 items-center gap-1 break-all font-medium text-[var(--brand)] hover:underline">{new URL(s.url.replace(/\s/g, '%20')).hostname.replace('www.', '')}<ExternalLink className="h-3.5 w-3.5 shrink-0" /></a>
                   <span className="block text-[var(--ink-3)]">{KIND[s.kind] || s.kind}{s.biased && <span className="ml-2 font-semibold text-warning" data-testid="source-biased-marker">Written by the company or a competitor</span>}</span>
                 </li>
               ))}

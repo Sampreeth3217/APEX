@@ -39,7 +39,7 @@ function HeroCards() {
   const pick = data?.persona?.results?.picks?.[0];
   const second = data?.persona?.results?.picks?.[1];
   return (
-    <div className="relative mx-auto h-[28rem] w-full max-w-[29rem] sm:h-[27rem]" data-testid="hero-result-preview">
+    <div className="relative mx-auto h-[27rem] w-full max-w-[29rem] sm:h-[27rem]" data-testid="hero-result-preview">
       <div className="if-card if-float if-pop-in if-floaty absolute inset-x-0 top-6 mx-auto w-[88%] p-5 sm:p-6" style={{ '--r': '-2deg', '--pd': '.15s' }}>
         <div className="flex items-center justify-between gap-3">
           <span className="text-sm text-[var(--ink-3)]">Top pick for a hair salon</span>
@@ -57,12 +57,12 @@ function HeroCards() {
         ) : <div className="mt-3 h-36 animate-pulse rounded-xl bg-[var(--surface-warm)]" />}
       </div>
       {second && (
-        <div className="if-card if-float if-pop-in if-floaty absolute -left-1 bottom-2 flex w-56 items-center gap-3 p-3 sm:-left-8" style={{ '--r': '3deg', '--pd': '.45s', '--fd': '1.2s' }}>
+        <div className="if-card if-float if-pop-in if-floaty absolute left-0 bottom-2 flex w-56 max-w-[75%] items-center gap-3 p-3 sm:-left-8" style={{ '--r': '3deg', '--pd': '.45s', '--fd': '1.2s' }}>
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl tint-blue text-[var(--brand)]"><CalendarCheck className="h-5 w-5" /></span>
           <span className="min-w-0"><span className="block text-xs text-[var(--ink-3)]">Second pick</span><span className="block truncate font-semibold">{second.tool.name}</span></span>
         </div>
       )}
-      <div className="if-card if-float if-pop-in if-floaty absolute -right-1 bottom-16 flex items-center gap-2 px-3 py-2 sm:-right-6" style={{ '--r': '-3deg', '--pd': '.7s', '--fd': '2.4s' }}>
+      <div className="if-card if-float if-pop-in if-floaty absolute right-0 bottom-16 flex items-center gap-2 px-3 py-2 sm:-right-6" style={{ '--r': '-3deg', '--pd': '.7s', '--fd': '2.4s' }}>
         <Sparkles className="h-4 w-4 text-[var(--brand)]" /><span className="text-sm font-semibold">Free trial available</span>
       </div>
     </div>
@@ -112,7 +112,7 @@ function Showcase() {
         <p className="if-eyebrow">What APEX helps with</p>
         <h2 id="showcase" className="mt-3 text-[clamp(2rem,4vw,3.2rem)]">The busywork, handled</h2>
       </Reveal>
-      <div className="mt-10 flex gap-2 overflow-x-auto pb-1 sm:justify-center" role="tablist" aria-label="Problems APEX helps with">
+      <div className="-mx-4 mt-10 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:justify-center sm:px-0" role="tablist" aria-label="Problems APEX helps with">
         {SHOWCASE.map((x, i) => {
           const TabIcon = x.icon;
           return (
@@ -124,12 +124,12 @@ function Showcase() {
           );
         })}
       </div>
-      <div className={`${s.tint} mt-2 grid items-center gap-10 rounded-[1.9rem] p-6 transition-colors duration-500 sm:p-10 lg:grid-cols-[1fr_1fr] lg:p-14`} role="tabpanel">
+      <div className={`${s.tint} mt-2 grid grid-cols-1 items-center gap-8 rounded-[1.9rem] p-5 transition-colors duration-500 sm:gap-10 sm:p-10 lg:grid-cols-2 lg:p-14`} role="tabpanel">
         <div key={s.slug} className="if-fade-up">
           <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[var(--surface)] text-[var(--brand)] if-float"><Icon className="h-7 w-7" /></span>
           <h3 className="mt-6 text-[clamp(1.7rem,3vw,2.5rem)] font-extrabold leading-[1.05] tracking-[-0.03em]">{s.title}</h3>
           <p className="mt-3 max-w-md text-[1.05rem] text-[var(--ink-2)]">{s.text}</p>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-7 grid grid-cols-1 gap-3 min-[400px]:flex min-[400px]:flex-wrap">
             <Link to="/start" className="if-btn-primary min-h-12 px-6">Find my tool <ArrowRight className="h-4 w-4" /></Link>
             <Link to={`/tools?category=${s.slug}`} className="if-btn min-h-12 bg-[var(--surface)] px-6 text-[var(--ink)] hover:bg-[var(--surface-hover)]">Browse tools</Link>
           </div>
@@ -183,7 +183,7 @@ export default function Landing() {
             <p className="if-eyebrow if-rise">For salons, cafés, trades and shops</p>
             <h1 className="if-rise if-d1 mt-4 text-[clamp(2.7rem,5.6vw,4.9rem)]">Find the right AI tool for your business</h1>
             <p className="if-rise if-d2 mt-5 max-w-lg text-[1.15rem] leading-relaxed text-[var(--ink-2)]">Answer a few easy questions. We’ll suggest up to three tools that fit your budget — and show you how to set them up.</p>
-            <div className="if-rise if-d3 mt-8 flex flex-wrap items-center gap-3">
+            <div className="if-rise if-d3 mt-8 grid grid-cols-1 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-center">
               <Link to="/start" className="if-btn-primary if-press min-h-14 px-7 text-[1.05rem]" data-testid="hero-start-button">Get started — it’s free <ArrowRight className="h-5 w-5" /></Link>
               <Link to="/demo" className="if-btn-ghost min-h-14 px-6 text-[1rem]" data-testid="hero-demo-button">See an example</Link>
             </div>

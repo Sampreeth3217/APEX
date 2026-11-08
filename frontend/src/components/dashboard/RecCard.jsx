@@ -49,7 +49,7 @@ export function RecCard({ pick, onSave, saved, compareHref, guideHref, readOnly,
         </p>
       )}
 
-      <button type="button" onClick={() => setMore(!more)} aria-expanded={more} className="mt-4 inline-flex items-center gap-1 self-start text-sm font-medium text-[var(--brand)] hover:underline" data-testid={`rec-more-${pick.rank}`}>
+      <button type="button" onClick={() => setMore(!more)} aria-expanded={more} className="-ml-1 mt-3 inline-flex min-h-11 items-center gap-1 self-start rounded-lg px-1 text-sm font-medium text-[var(--brand)] hover:underline" data-testid={`rec-more-${pick.rank}`}>
         {more ? 'Hide details' : 'More details'}<ChevronDown className={`h-4 w-4 transition-transform ${more ? 'rotate-180' : ''}`} />
       </button>
       {more && (

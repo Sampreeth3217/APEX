@@ -97,7 +97,7 @@ export default function Compare() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
   const setSlugs = (s) => setSp(s.length ? { tools: s.join(',') } : {});
-  const tools = state.data?.tools || [];
+  const tools = [...(state.data?.tools || [])].sort((a, b) => slugs.indexOf(a.slug) - slugs.indexOf(b.slug)); // same order as the numbered chips
   const differs = (fn) => new Set(tools.map(fn)).size > 1;
   return (
     <div className="if-container py-10 sm:py-14">
@@ -105,7 +105,7 @@ export default function Compare() {
       <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Side by side</h1>
       <p className="mt-2 text-[var(--ink-2)]">Pick two or three tools. Rows where they differ are highlighted. There is no “winner” — it depends on you.</p>
       <div className="mt-6 flex flex-wrap items-center gap-2" data-testid="compare-selected">
-        {slugs.map((s) => <span key={s} className="if-chip min-h-10 border-[var(--line)] bg-surface px-3">{tools.find((t) => t.slug === s)?.name || names.current[s] || s}<button type="button" onClick={() => setSlugs(slugs.filter((x) => x !== s))} aria-label={`Remove ${s}`} data-testid={`compare-remove-${s}`}><X className="h-4 w-4" /></button></span>)}
+        {slugs.map((s, i) => <span key={s} className="if-chip min-h-10 border-[var(--line)] bg-surface pl-1.5 pr-3">{slugs.length > 1 && <span className="grid h-6 w-6 place-items-center rounded-full bg-[var(--brand)] text-xs font-semibold text-[var(--on-brand)]">{i + 1}</span>}{tools.find((t) => t.slug === s)?.name || names.current[s] || s}<button type="button" onClick={() => setSlugs(slugs.filter((x) => x !== s))} aria-label={`Remove ${s}`} className="-mr-2 grid h-9 w-9 place-items-center rounded-full hover:bg-[var(--surface-hover)]" data-testid={`compare-remove-${s}`}><X className="h-4 w-4" /></button></span>)}
       </div>
       <div className="mt-8">
         {slugs.length < 2 && <Empty title={slugs.length ? 'Add one more tool' : 'Add at least two tools'}>Pick from the list below, or use the Compare button on any recommendation or tool page. <button type="button" className="font-semibold text-[var(--brand)] hover:underline" onClick={() => document.getElementById('compare-browse')?.scrollIntoView({ behavior: 'smooth' })}>Browse tools</button></Empty>}
@@ -113,7 +113,23 @@ export default function Compare() {
         {state.error && <ErrorState error={state.error} />}
         {tools.length >= 2 && (
           <>
-            <div className="if-card overflow-x-auto" data-testid="compare-table">
+            {/* Phones: one card per row, every tool listed underneath — no sideways scrolling */}
+            <div className="space-y-3 md:hidden" data-testid="compare-mobile">
+              {ROWS.map(([label, fn]) => (
+                <div key={label} className={`rounded-2xl border p-4 ${differs(fn) ? 'border-[var(--brand-ring)] bg-[var(--brand-soft)]' : 'border-[var(--line)] bg-[var(--surface)]'}`}>
+                  <p className="flex items-center justify-between gap-2 text-sm font-semibold text-[var(--ink-2)]">{label}{differs(fn) && <span className="text-xs font-normal text-[var(--brand)]">Differs</span>}</p>
+                  <dl className="mt-2 space-y-2">
+                    {tools.map((t, i) => (
+                      <div key={t.slug} className="flex gap-3">
+                        <dt className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[var(--surface-warm)] text-[0.7rem] font-semibold text-[var(--ink-2)]" title={t.name}>{i + 1}</dt>
+                        <dd className={`text-[0.95rem] ${fn(t) === 'Not listed' ? 'italic text-[var(--ink-3)]' : ''}`}><span className="sr-only">{t.name}: </span>{fn(t)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              ))}
+            </div>
+            <div className="if-card hidden overflow-x-auto md:block" data-testid="compare-table">
               <table className="w-full min-w-[640px] text-left text-[0.95rem]">
                 <thead><tr className="border-b border-[var(--line)]"><th className="w-48 p-4" />{tools.map((t) => <th key={t.slug} className="p-4 font-display text-lg font-bold"><Link to={`/tools/${t.slug}`} className="hover:underline">{t.name}</Link></th>)}</tr></thead>
                 <tbody>

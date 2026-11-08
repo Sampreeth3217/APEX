@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+    future: { hoverOnlyWhenSupported: true },
     // `overline` is a Tailwind utility; without this an app's own eyebrow-label class draws a line above the text.
     blocklist: ["overline"],
     darkMode: ["class"],

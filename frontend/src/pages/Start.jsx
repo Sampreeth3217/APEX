@@ -143,7 +143,7 @@ export default function Start() {
   const pct = Math.round((pos / total) * 100);
 
   return (
-    <div className="if-container max-w-2xl pb-28 pt-8 sm:pt-12" onKeyDown={(e) => { if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') next(); }}>
+    <div className="if-container max-w-2xl pb-[calc(7rem+env(safe-area-inset-bottom))] pt-6 sm:pt-12" onKeyDown={(e) => { if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') next(); }}>
       <div className="mb-8">
         <div className="flex items-center justify-between gap-3">
           <button type="button" className="inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-sm text-[var(--ink-2)] hover:bg-[var(--surface-hover)] disabled:invisible" onClick={() => move(-1)} disabled={i === 0} data-testid="questionnaire-back-button"><ArrowLeft className="h-4 w-4" />Back</button>
@@ -159,10 +159,10 @@ export default function Start() {
       </section>
 
       {/* Sticky action bar: always within thumb reach */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[var(--line)] bg-[var(--header-bg)] backdrop-blur-xl">
-        <div className="if-container flex max-w-2xl items-center justify-between gap-3 py-3">
-          <button type="button" className="text-sm text-[var(--ink-3)] underline-offset-2 hover:underline" onClick={() => { if (window.confirm('Clear your answers and start again?')) setA(emptyAnswers()); }} data-testid="questionnaire-reset-button">Start over</button>
-          <button type="button" className="if-btn-primary if-press min-h-12 min-w-44 text-base" onClick={next} data-testid="questionnaire-continue-button">
+      <div className="pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-[var(--line)] bg-[var(--header-bg)] backdrop-blur-xl">
+        <div className="if-container flex max-w-2xl items-center justify-between gap-3 pt-3">
+          <button type="button" className="-ml-2 min-h-11 rounded-lg px-2 text-sm text-[var(--ink-3)] underline-offset-2 hover:underline" onClick={() => { if (window.confirm('Clear your answers and start again?')) setA(emptyAnswers()); }} data-testid="questionnaire-reset-button">Start over</button>
+          <button type="button" className="if-btn-primary if-press min-h-12 min-w-36 text-base sm:min-w-44" onClick={next} data-testid="questionnaire-continue-button">
             {isLast ? 'See my results' : step.auto && !step.valid ? 'Choose one' : (step.hint?.includes('skip') && !a.software.length && i === 5) ? 'Skip' : 'Next'}<ArrowRight className="h-4 w-4" />
           </button>
         </div>

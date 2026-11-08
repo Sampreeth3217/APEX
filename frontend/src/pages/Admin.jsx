@@ -71,7 +71,7 @@ export function AdminLlm() {
   const $ = (n) => `$${Number(n || 0).toFixed(4)}`;
   return (
     <div className="if-container py-10 sm:py-14">
-      <Link to="/admin" className="text-sm text-[var(--ink-2)] hover:underline">← Admin</Link>
+      <Link to="/admin" className="-ml-1 inline-flex min-h-11 items-center rounded-lg px-1 text-sm text-[var(--ink-2)] hover:underline">← Admin</Link>
       <h1 className="mt-2 text-3xl font-extrabold">AI usage today</h1>
       {loading && <Loading />}
       {error && <ErrorState error={error} onRetry={reload} />}

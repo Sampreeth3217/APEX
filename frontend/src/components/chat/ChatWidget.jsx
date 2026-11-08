@@ -61,12 +61,12 @@ export function ChatWidget() {
   return (
     <>
       {!open && pathname !== '/start' && (
-        <button type="button" onClick={() => setOpen(true)} className="if-attention if-press fixed bottom-4 right-4 z-50 inline-flex h-14 min-w-14 items-center justify-center gap-2 rounded-full px-4 sm:bottom-5 sm:right-5 sm:rounded-2xl sm:px-5 bg-[var(--brand)] px-5 font-medium text-[var(--on-brand)] shadow-[var(--shadow-pop)] transition-colors hover:bg-[var(--brand-hover)]" aria-label="Ask a question" data-testid="chat-launcher-button">
+        <button type="button" onClick={() => setOpen(true)} className="if-attention if-press bottom-safe-4 fixed right-4 z-50 inline-flex h-14 min-w-14 items-center justify-center gap-2 rounded-full px-4 sm:bottom-5 sm:right-5 sm:rounded-2xl sm:px-5 bg-[var(--brand)] px-5 font-medium text-[var(--on-brand)] shadow-[var(--shadow-pop)] transition-colors hover:bg-[var(--brand-hover)]" aria-label="Ask a question" data-testid="chat-launcher-button">
           <MessageCircle className="h-5 w-5" /><span className="hidden sm:inline">Ask a question</span>
         </button>
       )}
       {open && (
-        <div className="if-fade-up fixed inset-x-3 bottom-3 z-50 flex h-[min(78vh,760px)] flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-surface shadow-[var(--shadow-pop)] sm:inset-x-auto sm:right-5 sm:w-[460px]" role="dialog" aria-label="APEX helper" data-testid="chat-panel">
+        <div className="if-fade-up fixed inset-x-0 bottom-0 z-50 flex h-[88dvh] max-h-[88vh] flex-col overflow-hidden rounded-t-[1.6rem] border border-[var(--line)] bg-surface shadow-[var(--shadow-pop)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:h-[min(78dvh,760px)] sm:max-h-none sm:w-[460px] sm:rounded-2xl" role="dialog" aria-label="APEX helper" data-testid="chat-panel">
           <div className="flex items-center justify-between border-b border-[var(--line)] bg-[var(--surface-warm)] px-4 py-3">
             <div><p className="font-display font-bold">Helper</p><p className="text-xs text-[var(--ink-2)]">{persona && !user ? 'Talking about the sample business' : 'Answers from our tool catalog'}</p></div>
             <button type="button" onClick={() => setOpen(false)} className="if-btn-quiet min-h-10" aria-label="Close helper" data-testid="chat-close-button"><X className="h-5 w-5" /></button>
@@ -89,7 +89,7 @@ export function ChatWidget() {
               maxLength={1500} placeholder="Type your question" aria-label="Your question" data-testid="chat-input" />
             <button type="submit" className="if-btn-primary min-h-11 px-4" disabled={busy || !input.trim()} aria-label="Send" data-testid="chat-send-button"><Send className="h-4 w-4" /></button>
           </form>
-          <p className="px-4 pb-3 text-[11px] text-[var(--ink-3)]">The helper can make mistakes. Tool pages list the sources.</p>
+          <p className="pb-safe px-4 text-[11px] text-[var(--ink-3)]">The helper can make mistakes. Tool pages list the sources.</p>
         </div>
       )}
     </>

@@ -95,7 +95,7 @@ export function Header() {
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-[var(--line)] bg-[var(--surface-warm)]">
+    <footer className="mt-24 border-t border-[var(--line)] bg-[var(--surface-warm)] pb-[env(safe-area-inset-bottom)]">
       <div className="if-container grid gap-10 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
         <div className="space-y-3">
           <Logo />

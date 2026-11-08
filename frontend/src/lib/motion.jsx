@@ -11,7 +11,8 @@ export function useInView(options = { threshold: 0.15, rootMargin: '0px 0px -8% 
     const el = ref.current;
     if (!el || seen) return undefined;
     if (prefersReducedMotion() || !('IntersectionObserver' in window)) { setSeen(true); return undefined; }
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } }, options);
+    // Shown once it enters the screen — or if it has already been scrolled past (fast flicks, jump links).
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting || e.boundingClientRect.bottom < 0) { setSeen(true); io.disconnect(); } }, options);
     io.observe(el);
     return () => io.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps

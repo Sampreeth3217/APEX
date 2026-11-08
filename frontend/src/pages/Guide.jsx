@@ -47,7 +47,7 @@ export default function Guide() {
   return (
     <div className="if-container max-w-3xl py-10 sm:py-14">
       {readOnly && <div className="mb-6 flex items-center gap-2 rounded-xl border border-warning-line bg-warning-soft px-4 py-3 text-sm font-medium text-warning" data-testid="guide-demo-banner"><FlaskConical className="h-4 w-4" />Sample guide (read-only), written for tech comfort {tech} of 5.</div>}
-      <Link to={`/tools/${tool.slug}`} className="text-sm text-[var(--ink-2)] hover:underline">← {tool.name}</Link>
+      <Link to={`/tools/${tool.slug}`} className="-ml-1 inline-flex min-h-11 items-center rounded-lg px-1 text-sm text-[var(--ink-2)] hover:underline">← {tool.name}</Link>
       <h1 className="mt-3 text-3xl font-extrabold sm:text-4xl" data-testid="guide-title">Set up {tool.name}</h1>
       <p className="mt-2 text-[var(--ink-2)]">Written for tech comfort {tech} of 5.{!readOnly && total > 0 && <span data-testid="guide-progress-count"> {progress.completed_steps.length} of {total} steps done.</span>}</p>
       {guide.is_fallback && <p className="mt-3 rounded-xl bg-[var(--surface-warm)] p-3 text-sm text-[var(--ink-2)]" data-testid="guide-fallback-note">A detailed guide isn’t available right now, so this is a short checklist with the provider’s links.</p>}
