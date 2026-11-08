@@ -1,4 +1,4 @@
-# Idea Foundry: AI Tool Finder for Small Businesses
+# APEX: AI Tool Finder for Small Businesses
 
 ## Platform
 Web app
@@ -14,18 +14,18 @@ Each pick comes with its evidence, unknowns, a rough estimate of hours saved and
 - **Admins** (nsc@umd.edu, rishidev@umd.edu, bsrinand@gmail.com), who approve listings, watch AI spending and run better-tool alerts.
 
 ## Source documents (the build follows these exactly)
-- Master build prompt: https://customer-assets-jt897jd0.emergentagent.net/job_b47cf957-1272-4ac8-bdb8-f972267fd8e2/artifacts/ed2972d532a0d8ca_idea_foundry_emergent_master_prompt.md
-- System design v2 (the source of truth for business logic, scoring, prompts and data rules): https://customer-assets-4nw71qhi.emergentagent.net/job_my-app-demo-29--9g0a89sj/artifacts/08e257dd9cac4fd2_idea_foundry_system_design_v2.md
-- Build companion (phases, acceptance checks, UI brief): https://customer-assets-4nw71qhi.emergentagent.net/job_my-app-demo-29--9g0a89sj/artifacts/e1baf70c33c672f9_copilot_build_prompt_v2.md
-- Database schema and access rules: https://customer-assets-4nw71qhi.emergentagent.net/job_my-app-demo-29--9g0a89sj/artifacts/66799cc39ec0a346_idea_foundry_migrations_v2.sql
-- 86-tool catalog: https://customer-assets-4nw71qhi.emergentagent.net/job_my-app-demo-29--9g0a89sj/artifacts/9a8917a315cd456d_ai_tools_seed.csv
+- Master build prompt: docs/source/master_prompt.md
+- System design v2 (the source of truth for business logic, scoring, prompts and data rules): docs/source/idea_foundry_system_design_v2.md
+- Build companion (phases, acceptance checks, UI brief): docs/source/copilot_build_prompt_v2.md
+- Database schema and access rules: backend/supabase/source/idea_foundry_migrations_v2.sql
+- 86-tool catalog: backend/data/ai_tools_seed.csv
 
 If the documents disagree, the system design wins and the conflict gets reported. The tech stack, file structure, security rules, environment variable names and test gates come from the master prompt: Next.js App Router, TypeScript strict, Tailwind, Supabase Postgres/Auth with row-level security, OpenRouter, Zod, Papa Parse, Vitest, Playwright and Lucide.
 
 ## Core features and experience
 - **Landing page:** premium, warm and trustworthy. Takes inspiration from G2, Wispr Flow and Grassfeld without copying them. Two buttons: "Find AI for my business" and "Try a sample business". Includes how it works, three example businesses and a preview of a real result.
 - **Questionnaire:** the 10 questions from the system design, one per screen. Progress is saved in the browser and survives a refresh, and there's no sign-in until the end.
-- **Google sign-in and onboarding:** name, business name, city or ZIP, and an optional phone number. Two separate consent boxes (email and text) start unticked, and their exact wording is saved.
+- **Email + password sign-in and onboarding:** name, business name, city or ZIP, and an optional phone number. Two separate consent boxes (email and text) start unticked, and their exact wording is saved.
 - **Results dashboard:** up to three picks from the scoring engine. Each card shows:
   - why it fits, who it's not for, and what to check first
   - the price or "Not listed"
@@ -65,7 +65,7 @@ If the documents disagree, the system design wins and the conflict gets reported
 - A 12-business hand-labelled test set, once labels are supplied
 
 ## Assumptions
-- The stack is the one named in the master prompt, not Emergent's default stack, and the code stays a portable Next.js project.
+- The stack is the one named in the master prompt, and the code stays a portable Next.js project.
 - Data and sign-in live in the user's own Supabase project. Its URL and keys come during the build, and Google sign-in is set up in the Supabase dashboard.
 - AI runs through the user's OpenRouter key and the two models the user picks (a cheap one and a mid-tier one). These come during the build, and the app works with AI switched off until then.
 - Email alerts use an email provider of the user's choice. Its name and key come during the build, and until then alerts are in-app only.

@@ -45,8 +45,8 @@ export function Admin() {
           ))}
         </ul>
       </section>
-      <section className="if-card mt-10 border-amber-300 p-6">
-        <p className="if-eyebrow text-amber-800">Demo / test mode</p>
+      <section className="if-card mt-10 border-warning-line p-6">
+        <p className="if-eyebrow text-warning">Demo / test mode</p>
         <h2 className="mt-1 font-display text-lg font-bold">Add a better tool and run alerts</h2>
         <p className="mt-1 text-[var(--ink-2)]">Adds a clearly labelled sample booking tool, then runs the better-tool check. Alerts appear in-app only — no emails or texts are sent.</p>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -71,7 +71,7 @@ export function AdminLlm() {
   const $ = (n) => `$${Number(n || 0).toFixed(4)}`;
   return (
     <div className="if-container py-10 sm:py-14">
-      <Link to="/admin" className="text-sm text-[var(--ink-2)] hover:underline">← Admin</Link>
+      <Link to="/admin" className="-ml-1 inline-flex min-h-11 items-center rounded-lg px-1 text-sm text-[var(--ink-2)] hover:underline">← Admin</Link>
       <h1 className="mt-2 text-3xl font-extrabold">AI usage today</h1>
       {loading && <Loading />}
       {error && <ErrorState error={error} onRetry={reload} />}
@@ -82,7 +82,7 @@ export function AdminLlm() {
               <div key={l} className="if-card p-5" data-testid={id}><p className="text-sm text-[var(--ink-2)]">{l}</p><p className="mt-1 font-display text-2xl font-extrabold">{v}</p></div>
             ))}
           </div>
-          <p className={`mt-4 inline-flex rounded-xl px-4 py-2 text-sm font-semibold ${data.budget.blocked ? 'bg-red-50 text-red-800' : 'bg-emerald-50 text-emerald-800'}`} data-testid="llm-budget-status">{data.budget.blocked ? 'Budget guard ACTIVE — AI calls use fallbacks' : 'Budget guard on — within budget'}{!data.llm_enabled && ' · AI is switched off'}</p>
+          <p className={`mt-4 inline-flex rounded-xl px-4 py-2 text-sm font-semibold ${data.budget.blocked ? 'bg-danger-soft text-danger' : 'bg-success-soft text-success'}`} data-testid="llm-budget-status">{data.budget.blocked ? 'Budget guard ACTIVE — AI calls use fallbacks' : 'Budget guard on — within budget'}{!data.llm_enabled && ' · AI is switched off'}</p>
           <div className="if-card mt-6 overflow-x-auto">
             <table className="w-full min-w-[520px] text-left text-sm" data-testid="llm-by-task-table">
               <thead><tr className="border-b border-[var(--line)]">{['Task', 'Calls', 'Spend', 'Cache hits', 'Fallbacks'].map((h) => <th key={h} className="p-3 font-semibold">{h}</th>)}</tr></thead>

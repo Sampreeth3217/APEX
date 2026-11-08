@@ -13,8 +13,8 @@ export const SkeletonCards = ({ n = 3 }) => (
 );
 
 export const ErrorState = ({ error, onRetry }) => (
-  <div className="if-card flex flex-col items-start gap-3 border-red-200 bg-red-50/60 p-6" role="alert" data-testid="error-state">
-    <p className="flex items-center gap-2 font-semibold text-red-800"><AlertCircle className="h-5 w-5" />{error?.message || 'Something went wrong.'}</p>
+  <div className="if-card flex flex-col items-start gap-3 border-danger-line bg-danger-soft p-6" role="alert" data-testid="error-state">
+    <p className="flex items-center gap-2 font-semibold text-danger"><AlertCircle className="h-5 w-5" />{error?.message || 'Something went wrong.'}</p>
     {onRetry && <button type="button" className="if-btn-ghost" onClick={onRetry} data-testid="error-retry-button">Try again</button>}
   </div>
 );

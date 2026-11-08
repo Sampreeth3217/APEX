@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { RefreshCw, PencilLine } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
@@ -22,6 +22,8 @@ export default function Dashboard() {
   usePageTitle('My results');
   const { user, loading: authLoading } = useAuth();
   const nav = useNavigate();
+  const location = useLocation();
+  const forceKey = location.state?.refresh;
   const [state, setState] = useState({ loading: true });
   const { saved, save } = useSavedSlugs(!!user);
 
@@ -41,8 +43,9 @@ export default function Dashboard() {
     if (authLoading) return;
     if (!user) { nav('/login', { replace: true }); return; }
     if (!user.onboarding_complete) { nav('/onboarding', { replace: true }); return; }
-    load(false);
-  }, [authLoading, user, nav, load]);
+    load(!!forceKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, user?.id, user?.onboarding_complete, nav, load, forceKey]);
 
   const changeAnswers = async () => {
     try {
@@ -54,23 +57,24 @@ export default function Dashboard() {
 
   if (authLoading || !user) return null;
   return (
-    <div className="if-container py-10 sm:py-14">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="if-container py-6 sm:py-8">
+      <div className="if-hero-panel -mx-2 rounded-[1.9rem] px-6 py-10 sm:px-10">
+        <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="if-eyebrow">Your results</p>
-          <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl" data-testid="dashboard-title">Tools that fit {user.business_name || 'your business'}</h1>
-          {state.results?.summary && <p className="mt-3 text-[var(--ink-2)]" data-testid="dashboard-summary">{state.results.summary}</p>}
+          <h1 className="text-[clamp(2rem,4vw,3rem)]" data-testid="dashboard-title">Your best matches{user.business_name ? <span className="text-[var(--ink-3)]"> for {user.business_name}</span> : ''}</h1>
+          {state.results?.summary && <p className="mt-2 text-[var(--ink-2)]" data-testid="dashboard-summary">{state.results.summary}</p>}
         </div>
-        <div className="flex gap-2">
-          <button type="button" className="if-btn-ghost" onClick={changeAnswers} data-testid="dashboard-change-answers-button"><PencilLine className="h-4 w-4" />Change my answers</button>
-          <button type="button" className="if-btn-quiet" onClick={() => load(true)} disabled={state.loading} data-testid="dashboard-refresh-button"><RefreshCw className={`h-4 w-4 ${state.loading ? 'animate-spin' : ''}`} />Refresh</button>
+        <div className="flex gap-1">
+          <button type="button" className="if-btn-quiet" onClick={changeAnswers} data-testid="dashboard-change-answers-button"><PencilLine className="h-4 w-4" />Change answers</button>
+          <button type="button" className="if-btn-quiet" onClick={() => load(true)} disabled={state.loading} aria-label="Refresh results" title="Refresh results" data-testid="dashboard-refresh-button"><RefreshCw className={`h-4 w-4 ${state.loading ? 'animate-spin' : ''}`} /></button>
+        </div>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="mt-8">
         {state.loading && <SkeletonCards />}
         {state.error && <ErrorState error={state.error} onRetry={() => load(false)} />}
         {!state.loading && !state.error && !state.results && (
-          <Empty title="No results yet">Answer the 10 questions and we’ll find your top tools. <Link to="/start" className="font-semibold text-[var(--brand)] hover:underline" data-testid="dashboard-start-link">Start now</Link></Empty>
+          <Empty title="No results yet">Answer a few quick questions and we’ll find your best matches. <Link to="/start" className="font-semibold text-[var(--brand)] hover:underline" data-testid="dashboard-start-link">Start now</Link></Empty>
         )}
         {!state.loading && state.results && <ResultsView results={state.results} savedSlugs={saved} onSave={save} />}
       </div>

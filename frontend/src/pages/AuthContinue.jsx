@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { loadAnswers, toPayload } from '@/lib/answers';
@@ -15,28 +15,21 @@ export async function submitAnswers() {
   return true;
 }
 
-// Handles both the Google return (#session_id=…) and the post-sign-in routing.
+// Post-sign-in routing: onboarding, pending questionnaire submit, or the page the visitor came from.
 export default function AuthContinue() {
-  const location = useLocation();
   const nav = useNavigate();
   const { setUser } = useAuth();
-  const done = useRef(false);
+  const done = useRef(-1);
   const [error, setError] = useState(null);
 
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    if (done.current) return;
-    done.current = true;
+    if (done.current === attempt) return;
+    done.current = attempt;
+    setError(null);
     (async () => {
       try {
-        let user;
-        const m = location.hash.match(/session_id=([^&]+)/);
-        if (m) {
-          const d = await api('/auth/session', { method: 'POST', body: { session_id: decodeURIComponent(m[1]) } });
-          user = d.user; setUser(user);
-          window.history.replaceState(null, '', '/auth/continue');
-        } else {
-          user = (await api('/auth/me')).user; setUser(user);
-        }
+        const user = (await api('/auth/me')).user; setUser(user);
         const wantsSubmit = sessionStorage.getItem('if_submit_answers') === '1' && loadAnswers().completed;
         if (!user.onboarding_complete) return nav('/onboarding', { replace: true });
         if (wantsSubmit) { await submitAnswers(); return nav('/dashboard', { replace: true }); }
@@ -45,10 +38,12 @@ export default function AuthContinue() {
         nav(next && next.startsWith('/') && !next.startsWith('//') && next !== '/auth/continue' ? next : '/dashboard', { replace: true });
       } catch (e) {
         if (e.status === 401) return nav('/login', { replace: true });
+        // A 400 about the answers means a question needs fixing: send the owner back to the questionnaire, still signed in.
+        if (e.status === 400 && e.field === 'needs') { sessionStorage.removeItem('if_submit_answers'); return nav('/start', { replace: true, state: { error: e.message, step: 1 } }); }
         setError(e);
       }
     })();
-  }, [location.hash, nav, setUser]);
+  }, [attempt, nav, setUser]);
 
-  return <div className="if-container max-w-xl py-16">{error ? <ErrorState error={error} onRetry={() => window.location.assign('/login')} /> : <Loading label="Getting your results ready…" />}</div>;
+  return <div className="if-container max-w-xl py-16">{error ? <ErrorState error={error} onRetry={() => setAttempt((n) => n + 1)} /> : <Loading label="Getting your results ready…" />}</div>;
 }

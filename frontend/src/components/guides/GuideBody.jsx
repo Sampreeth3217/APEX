@@ -45,9 +45,9 @@ export function GuideBody({ md, completed = [], onToggle, readOnly }) {
                 if (num && isSteps) {
                   stepIdx += 1; const idx = stepIdx; const done = completed.includes(idx);
                   return (
-                    <label key={k} className={`flex cursor-pointer gap-3 rounded-xl border p-3 transition-colors ${done ? 'border-emerald-200 bg-emerald-50/60' : 'border-[var(--line)] bg-white hover:bg-[var(--surface-warm)]'}`}>
+                    <label key={k} className={`flex cursor-pointer gap-3 rounded-xl border p-3 transition-colors ${done ? 'border-success-line bg-success-soft' : 'border-[var(--line)] bg-surface hover:bg-[var(--surface-warm)]'}`}>
                       <input type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-[var(--brand)]" checked={done} disabled={readOnly} onChange={() => onToggle?.(idx)} data-testid={`guide-step-checkbox-${idx}`} />
-                      <span className={done ? 'text-[var(--ink-2)] line-through decoration-emerald-600/40' : ''}><span className="mr-1 font-bold">{idx + 1}.</span>{inline(num[1], k)}</span>
+                      <span className={done ? 'text-[var(--ink-2)] line-through decoration-success' : ''}><span className="mr-1 font-bold">{idx + 1}.</span>{inline(num[1], k)}</span>
                     </label>
                   );
                 }

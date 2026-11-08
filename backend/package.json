@@ -1,5 +1,5 @@
 {
-  "name": "idea-foundry-api",
+  "name": "apex-api",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
     "test": "vitest run",
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",

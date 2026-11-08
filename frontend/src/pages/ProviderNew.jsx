@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
-import { useAuth, startGoogleLogin } from '@/lib/auth';
+import { useAuth, startLogin } from '@/lib/auth';
 import { useApi, useMeta, usePageTitle } from '@/lib/hooks';
 
 const init = { name: '', category: '', best_for: '', summary: '', website_url: '', help_url: '', contact_email: '', pricing_notes: '', has_free_plan: null, has_free_trial: null, ai_features: '', integrations: '' };
@@ -16,7 +16,7 @@ export default function ProviderNew() {
   const [f, setF] = useState(init); const [err, setErr] = useState(''); const [busy, setBusy] = useState(false);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   if (!user) return (
-    <div className="if-container max-w-xl py-14"><div className="if-card p-8"><h1 className="text-2xl font-extrabold">List your AI tool</h1><p className="mt-2 text-[var(--ink-2)]">Sign in to submit a listing. Every listing is reviewed by our team before it appears.</p><button type="button" className="if-btn-primary mt-6" onClick={() => startGoogleLogin('/providers/new')} data-testid="provider-signin-button">Continue with Google</button></div></div>
+    <div className="if-container max-w-xl py-14"><div className="if-card p-8"><h1 className="text-2xl font-extrabold">List your AI tool</h1><p className="mt-2 text-[var(--ink-2)]">Sign in to submit a listing. Every listing is reviewed by our team before it appears.</p><button type="button" className="if-btn-primary mt-6" onClick={() => startLogin('/providers/new')} data-testid="provider-signin-button">Sign in to continue</button></div></div>
   );
   const submit = async (e) => {
     e.preventDefault(); setErr(''); setBusy(true);
@@ -26,7 +26,7 @@ export default function ProviderNew() {
       toast.success('Submitted for review'); setF(init); mine.reload();
     } catch (x) { setErr(x.message); } finally { setBusy(false); }
   };
-  const L = ({ label, req, children }) => <label className="block"><span className="font-semibold">{label}{req && <span className="text-red-700"> *</span>}</span><div className="mt-1.5">{children}</div></label>;
+  const L = ({ label, req, children }) => <label className="block"><span className="font-semibold">{label}{req && <span className="text-danger"> *</span>}</span><div className="mt-1.5">{children}</div></label>;
   return (
     <div className="if-container max-w-2xl py-12">
       <h1 className="text-3xl font-extrabold">List your AI tool</h1>
@@ -48,7 +48,7 @@ export default function ProviderNew() {
         </div>
         <L label="AI features (separate with commas)"><input className="if-input" value={f.ai_features} onChange={set('ai_features')} data-testid="provider-features-input" /></L>
         <L label="Works with (separate with commas)"><input className="if-input" value={f.integrations} onChange={set('integrations')} data-testid="provider-integrations-input" /></L>
-        {err && <p className="font-medium text-red-700" role="alert" data-testid="provider-error">{err}</p>}
+        {err && <p className="font-medium text-danger" role="alert" data-testid="provider-error">{err}</p>}
         <button type="submit" className="if-btn-primary w-full" disabled={busy} data-testid="provider-submit-button">{busy ? 'Submitting…' : 'Submit for review'}</button>
       </form>
       {mine.data?.tools?.length > 0 && (

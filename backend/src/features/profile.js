@@ -68,3 +68,38 @@ export function templateSummary(p) {
   const budget = p.free_only ? 'free tools only' : `up to about $${p.budget_month} a month`;
   return `${size[0].toUpperCase()}${size.slice(1)} ${type} that wants help with ${needs}. Tech comfort ${p.tech_comfort} of 5, budget ${budget}, and wants it running ${URGENCY_WORDS[p.urgency]}.`;
 }
+
+// Plain keyword matching of the owner's own words ("Something else" + question 10) to the 10 areas.
+// Used before/alongside the AI so a free-text answer is never rejected just because the AI is off or unsure.
+const NEED_KEYWORDS = {
+  ai_receptionist: ['call', 'calls', 'phone', 'voicemail', 'receptionist', 'answer the phone', 'missed call', 'ringing', 'after hours', 'after-hours'],
+  customer_chatbot: ['chat', 'chatbot', 'website question', 'same question', 'faq', 'questions all day', 'live chat', 'messages', 'dm', 'inquir', 'enquir', 'lead'],
+  scheduling: ['book', 'booking', 'appointment', 'schedule appointments', 'calendar', 'no-show', 'no show', 'cancel', 'reschedul', 'reminder', 'reservation'],
+  reviews_reputation: ['review', 'reviews', 'yelp', 'google rating', 'rating', 'reputation', 'feedback', 'testimonial'],
+  social_content: ['social', 'instagram', 'facebook', 'tiktok', 'post', 'posts', 'content', 'linkedin', 'marketing'],
+  email_marketing: ['email', 'newsletter', 'promo', 'promotion', 'campaign', 'coupon', 'loyalty', 'repeat customer', 'mailing'],
+  bookkeeping: ['bookkeep', 'invoice', 'invoicing', 'accounting', 'tax', 'taxes', 'receipt', 'expense', 'quickbooks', 'books', 'bill', 'billing', 'payment', 'paid', 'cash flow'],
+  field_service: ['job', 'jobs', 'crew', 'dispatch', 'technician', 'quote', 'estimate', 'field', 'route', 'work order'],
+  restaurant_inventory: ['inventory', 'stock', 'order supplies', 'supplier', 'waste', 'over-order', 'run out', 'ingredients', 'menu cost'],
+  workforce: ['shift', 'shifts', 'staff', 'employee', 'hiring', 'hire', 'payroll', 'timesheet', 'roster', 'team schedule', 'turnover'],
+};
+
+export function inferNeeds(text, max = 2) {
+  const t = ` ${String(text || '').toLowerCase()} `;
+  if (t.trim().length < 2) return [];
+  const scores = Object.entries(NEED_KEYWORDS).map(([slug, words]) => [slug, words.reduce((n, w) => n + (t.includes(w) ? (w.length > 5 ? 2 : 1) : 0), 0)]);
+  return scores.filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]).slice(0, max).map(([s]) => s);
+}
+
+// Last resort: find which area's tools best match the owner's words in the catalog.
+export function inferNeedsFromCatalog(text, tools, max = 1) {
+  const words = String(text || '').toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length > 3);
+  if (!words.length) return [];
+  const score = {};
+  for (const tool of tools) {
+    const hay = [tool.name, tool.best_for, tool.summary, ...(tool.ai_features || []), ...(tool.typical_use_cases || [])].join(' ').toLowerCase();
+    const n = words.filter((w) => hay.includes(w)).length;
+    if (n && CATEGORY_SLUGS.includes(tool.category)) score[tool.category] = (score[tool.category] || 0) + n;
+  }
+  return Object.entries(score).sort((a, b) => b[1] - a[1]).slice(0, max).map(([s]) => s);
+}

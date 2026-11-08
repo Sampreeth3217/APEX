@@ -1,19 +1,63 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
-import { startGoogleLogin } from '@/lib/auth';
+import { api } from '@/lib/api';
+import { useAuth } from '@/lib/auth';
 import { usePageTitle } from '@/lib/hooks';
 
 export default function Login() {
-  usePageTitle('Sign in');
+  const [mode, setMode] = useState('signin');
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [error, setError] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const { setUser } = useAuth();
+  const nav = useNavigate();
+  const isNew = mode === 'register';
+  usePageTitle(isNew ? 'Create account' : 'Sign in');
+
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const submit = async (e) => {
+    e.preventDefault();
+    setError(null); setBusy(true);
+    try {
+      const body = isNew ? form : { email: form.email, password: form.password };
+      const d = await api(isNew ? '/auth/register' : '/auth/login', { method: 'POST', body });
+      setUser(d.user);
+      nav('/auth/continue', { replace: true });
+    } catch (err) {
+      setError(err.message);
+    } finally { setBusy(false); }
+  };
+
   return (
     <div className="if-container max-w-md py-16">
       <div className="if-card p-8">
-        <h1 className="text-3xl font-extrabold">Sign in</h1>
+        <h1 className="text-3xl font-extrabold">{isNew ? 'Create your account' : 'Sign in'}</h1>
         <p className="mt-2 text-[var(--ink-2)]">Save your results, keep a list of tools, and get setup guides made for you.</p>
-        <button type="button" onClick={() => startGoogleLogin(sessionStorage.getItem('if_after_login') || '/dashboard')} className="if-btn-ghost mt-8 w-full min-h-14 text-base" data-testid="login-google-button">
-          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.8z" /><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z" /><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6h-4a12 12 0 0 0 0 10.8l4-3.1z" /><path fill="#EA4335" d="M12 4.8c1.8 0 3.4.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z" /></svg>
-          Continue with Google
-        </button>
+        <form onSubmit={submit} className="mt-8 space-y-4" noValidate>
+          {isNew && (
+            <label className="block"><span className="text-sm font-semibold">Your name</span>
+              <input className="if-input mt-1 w-full" autoComplete="name" value={form.name} onChange={set('name')} required data-testid="login-name-input" />
+            </label>
+          )}
+          <label className="block"><span className="text-sm font-semibold">Email</span>
+            <input className="if-input mt-1 w-full" type="email" autoComplete="email" value={form.email} onChange={set('email')} required data-testid="login-email-input" />
+          </label>
+          <label className="block"><span className="text-sm font-semibold">Password</span>
+            <input className="if-input mt-1 w-full" type="password" autoComplete={isNew ? 'new-password' : 'current-password'} minLength={isNew ? 8 : undefined} value={form.password} onChange={set('password')} required data-testid="login-password-input" />
+            {isNew && <span className="mt-1 block text-xs text-[var(--ink-3)]">At least 8 characters.</span>}
+          </label>
+          {error && <p role="alert" className="text-sm font-semibold text-danger" data-testid="login-error">{error}</p>}
+          <button type="submit" disabled={busy} className="if-btn-primary w-full min-h-12 text-base" data-testid="login-submit-button">
+            {busy ? 'Please wait…' : isNew ? 'Create account' : 'Sign in'}
+          </button>
+        </form>
+        <p className="mt-4 text-sm">
+          {isNew ? 'Already have an account? ' : 'New here? '}
+          <button type="button" className="font-semibold text-[var(--brand)] hover:underline" onClick={() => { setMode(isNew ? 'signin' : 'register'); setError(null); }} data-testid="login-toggle-mode">
+            {isNew ? 'Sign in' : 'Create an account'}
+          </button>
+        </p>
         <p className="mt-6 flex gap-2 text-sm text-[var(--ink-3)]"><ShieldCheck className="h-4 w-4 shrink-0" />We only use your name and email. We never post anything or contact you unless you say so.</p>
         <p className="mt-4 text-sm">Just looking? <Link to="/demo" className="font-semibold text-[var(--brand)] hover:underline">Try a sample business</Link></p>
       </div>

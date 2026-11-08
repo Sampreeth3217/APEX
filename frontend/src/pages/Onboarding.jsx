@@ -10,10 +10,10 @@ export const CONSENT = { email: 'Email me about updates to my search', sms: 'Tex
 
 const Field = ({ label, optional, error, children, hint }) => (
   <label className="block">
-    <span className="font-semibold">{label} {optional ? <span className="font-normal text-[var(--ink-3)]">(optional)</span> : <span className="text-red-700" aria-hidden="true">*</span>}</span>
+    <span className="font-semibold">{label} {optional ? <span className="font-normal text-[var(--ink-3)]">(optional)</span> : <span className="text-danger" aria-hidden="true">*</span>}</span>
     {hint && <span className="block text-sm text-[var(--ink-2)]">{hint}</span>}
     <div className="mt-1.5">{children}</div>
-    {error && <span className="mt-1 block text-sm font-medium text-red-700" role="alert">{error}</span>}
+    {error && <span className="mt-1 block text-sm font-medium text-danger" role="alert">{error}</span>}
   </label>
 );
 
@@ -39,12 +39,12 @@ export function ProfileForm({ initial, submitLabel, onSubmit, testPrefix, showNa
       <Field label="Business name" optional><input className="if-input" value={f.business_name || ''} onChange={set('business_name')} data-testid={`${testPrefix}-business-input`} /></Field>
       <Field label="City or ZIP" optional><input className="if-input" value={f.location || ''} onChange={set('location')} autoComplete="postal-code" data-testid={`${testPrefix}-location-input`} /></Field>
       <Field label="Phone" optional hint="Only needed if you want text updates." error={err.phone}><input className="if-input" type="tel" value={f.phone || ''} onChange={set('phone')} autoComplete="tel" data-testid={`${testPrefix}-phone-input`} /></Field>
-      <fieldset className="space-y-3 rounded-xl border border-[var(--line)] bg-[var(--surface-warm)]/50 p-4">
+      <fieldset className="space-y-3 rounded-xl border border-[var(--line)] bg-[var(--surface-warm)] p-4">
         <legend className="px-1 text-sm font-semibold">Updates (both optional)</legend>
-        <label className="flex min-h-11 items-start gap-3"><input type="checkbox" className="mt-1 h-5 w-5 accent-[var(--brand)]" checked={!!f.email_consent} onChange={set('email_consent')} data-testid={`${testPrefix}-email-consent`} /><span>{CONSENT.email}</span></label>
-        <label className="flex min-h-11 items-start gap-3"><input type="checkbox" className="mt-1 h-5 w-5 accent-[var(--brand)]" checked={!!f.sms_consent} onChange={set('sms_consent')} data-testid={`${testPrefix}-sms-consent`} /><span>{CONSENT.sms}</span></label>
+        <label className="flex min-h-11 items-start gap-3"><input type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-[var(--brand)]" checked={!!f.email_consent} onChange={set('email_consent')} data-testid={`${testPrefix}-email-consent`} /><span>{CONSENT.email}</span></label>
+        <label className="flex min-h-11 items-start gap-3"><input type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-[var(--brand)]" checked={!!f.sms_consent} onChange={set('sms_consent')} data-testid={`${testPrefix}-sms-consent`} /><span>{CONSENT.sms}</span></label>
       </fieldset>
-      {err.form && <p className="font-medium text-red-700" role="alert" data-testid={`${testPrefix}-error`}>{err.form}</p>}
+      {err.form && <p className="font-medium text-danger" role="alert" data-testid={`${testPrefix}-error`}>{err.form}</p>}
       <button type="submit" className="if-btn-primary w-full min-h-14" disabled={busy} data-testid={`${testPrefix}-submit-button`}>{busy ? 'Saving…' : submitLabel}</button>
     </form>
   );

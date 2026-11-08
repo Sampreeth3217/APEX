@@ -1,5 +1,5 @@
 {
-  "project_name": "Idea Foundry",
+  "project_name": "APEX",
   "app_type": "hybrid_fullstack_saas_and_marketplace",
   "target_audience": "Non-technical small-business owners (salons, restaurants, plumbers/HVAC, landscapers, cleaners, retail, online stores)",
   "emotional_tone": "Premium, modern, warm, trustworthy, human, clear, non-intimidating",
@@ -65,7 +65,7 @@
         "Confident Hero section with high-impact headline, 1-line plain language value proposition, and interactive HTML/SVG tool fit preview card",
         "Trust signals bar with real business types (Salons, HVAC, Restaurants, Cleaners) and clear outcome metrics",
         "10-category SMB AI tools grid preview with tool counts and hours saved",
-        "Interactive 'How Idea Foundry Works' 3-step visualization",
+        "Interactive 'How APEX Works' 3-step visualization",
         "Start Free Evaluation CTA banner leading to /start"
       ]
     },

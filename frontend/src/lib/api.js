@@ -1,4 +1,5 @@
-const BASE = `${import.meta.env.REACT_APP_BACKEND_URL}/api`;
+// Same-origin by default (Vite proxies /api to the local API). Set VITE_BACKEND_URL to call a different host.
+const BASE = `${import.meta.env.VITE_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL || ''}/api`;
 
 export class ApiError extends Error {
   constructor(message, status, field) { super(message); this.status = status; this.field = field; }
