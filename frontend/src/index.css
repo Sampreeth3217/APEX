@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --canvas: #FAF8F5;
+    --surface: #FFFFFF;
+    --surface-warm: #F4F0EA;
+    --surface-hover: #EFEAE1;
+    --ink: #1C1917;
+    --ink-2: #57534E;
+    --ink-3: #78716C;
+    --brand: #4338CA;
+    --brand-hover: #3730A3;
+    --brand-soft: #EEF2FF;
+    --teal: #0D9488;
+    --amber: #D97706;
+    --line: #E7E5E4;
+
+    --background: 36 33% 97%;
+    --foreground: 24 10% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 10%;
+    --primary: 243 75% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 36 30% 94%;
+    --secondary-foreground: 24 10% 10%;
+    --muted: 36 30% 94%;
+    --muted-foreground: 25 5% 45%;
+    --accent: 36 30% 92%;
+    --accent-foreground: 24 10% 10%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 6% 90%;
+    --input: 20 6% 85%;
+    --ring: 243 75% 59%;
+    --radius: 0.875rem;
+  }
+  html { font-size: 17px; }
+  @media (min-width: 640px) { html { font-size: 18px; } }
+  body {
+    @apply bg-[var(--canvas)] text-[var(--ink)] antialiased;
+    font-family: 'Ranade', 'Inter', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, .font-display { font-family: 'Ranade', 'Inter', sans-serif; letter-spacing: -0.015em; }
+  /* Captions and small supporting text: Inter. Highlights (eyebrows, buttons, emphasis): Poppins. */
+  .text-xs, .text-sm, figcaption, small { font-family: 'Inter', system-ui, sans-serif; }
+  button, .if-btn, strong, mark { font-family: 'Poppins', 'Inter', sans-serif; }
+  /* Labels and tags: Libre Baskerville. */
+  label > span:first-child, legend, dt, th, .if-label { font-family: 'Libre Baskerville', Georgia, serif; }
+  ::selection { background: #C7D2FE; color: #1C1917; }
+  :focus-visible { outline: 3px solid #6366F1; outline-offset: 2px; border-radius: 6px; }
+  * { @apply border-border; }
+}
+
+@layer components {
+  .if-container { @apply mx-auto w-full max-w-6xl px-5 sm:px-8; }
+  .if-card { @apply rounded-2xl border border-[var(--line)] bg-white; box-shadow: 0 1px 2px rgba(28,25,23,.04), 0 8px 24px -12px rgba(28,25,23,.08); }
+  .if-eyebrow { @apply text-xs font-semibold uppercase tracking-[0.14em] text-[var(--ink-3)]; font-family: 'Poppins', sans-serif; }
+  .if-btn { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-base font-semibold transition-[background-color,color,box-shadow,transform] duration-200 disabled:opacity-50 disabled:pointer-events-none active:translate-y-px; }
+  .if-btn-primary { @apply if-btn bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)] shadow-[0_6px_16px_-8px_rgba(67,56,202,.7)]; }
+  .if-btn-ghost { @apply if-btn border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-[var(--surface-hover)]; }
+  .if-btn-quiet { @apply if-btn min-h-10 px-3 text-[var(--ink-2)] hover:bg-[var(--surface-warm)]; }
+  .if-chip { @apply inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-sm font-medium; font-family: 'Libre Baskerville', Georgia, serif; font-size: .8rem; }
+  .if-input { @apply min-h-12 w-full rounded-xl border border-[var(--line)] bg-white px-4 text-base text-[var(--ink)] placeholder:text-[var(--ink-3)] focus:border-[var(--brand)] focus:outline-none focus:ring-2 focus:ring-indigo-200; }
+  .if-warm-surface { background: radial-gradient(120% 80% at 0% 0%, #EEF2FF 0%, rgba(238,242,255,0) 55%), radial-gradient(90% 70% at 100% 10%, #FEF3C7 0%, rgba(254,243,199,0) 50%), var(--canvas); }
+  .if-grain { position: relative; }
+  .if-grain::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .06; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+}
+
+@keyframes if-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.if-rise { animation: if-rise .5s cubic-bezier(.2,.7,.2,1) both; }
+.if-d1 { animation-delay: .06s; } .if-d2 { animation-delay: .12s; } .if-d3 { animation-delay: .18s; } .if-d4 { animation-delay: .24s; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}

@@ -1,0 +1,14 @@
+export const SCORING_VERSION = 'v2.0';
+export const DEFAULT_WEIGHTS = { N: 0.35, B: 0.25, A: 0.15, T: 0.10, I: 0.15 };
+export const PRIORITY_DIM = { cost: 'B', ease: 'A', speed: 'T', results: 'N' };
+export const SRC_W = { g2: 1.0, capterra: 1.0, trustpilot: 0.8, editorial: 0.5, toolradar: 0.5 };
+export const SRC_DEF = { g2: 15, capterra: 15, trustpilot: 15, editorial: 5, toolradar: 5 };
+export const BAYES_C = 50;
+export const ALPHA = 0.70;
+export const FIT_THRESHOLD = 0.55;
+export const TRUST_THRESHOLD = 0.30;
+export const TIE_EPS = 0.02;
+export const BETTER_TOOL_DELTA = 0.08;
+export const TIME_CLASSES = ['same_day', 'few_days', 'needs_onboarding'];
+export const URGENCY_CLASS = { this_week: 'same_day', this_month: 'few_days', no_rush: 'needs_onboarding' };
+export const TIME_PENALTY = [1.0, 0.6, 0.3];

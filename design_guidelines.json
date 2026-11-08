@@ -1,0 +1,223 @@
+{
+  "project_name": "Idea Foundry",
+  "app_type": "hybrid_fullstack_saas_and_marketplace",
+  "target_audience": "Non-technical small-business owners (salons, restaurants, plumbers/HVAC, landscapers, cleaners, retail, online stores)",
+  "emotional_tone": "Premium, modern, warm, trustworthy, human, clear, non-intimidating",
+  "archetype": "ORGANIC & EARTHY / SWISS HYBRID (Warm Neutral + Deep Indigo Accent)",
+  "typography": {
+    "font_family_heading": "Manrope, Inter, sans-serif",
+    "font_family_body": "Inter, system-ui, sans-serif",
+    "base_font_size": "18px (text-base sm:text-lg for primary readability)",
+    "h1_heading": "text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight",
+    "h2_heading": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+    "h3_heading": "text-xl sm:text-2xl font-semibold tracking-normal",
+    "body_text": "text-base sm:text-lg leading-relaxed text-stone-800",
+    "caption_text": "text-sm text-stone-600 font-medium",
+    "micro_label": "text-xs font-semibold uppercase tracking-wider text-stone-500",
+    "anti_patterns": "Do not use generic raw Inter headers without weight contrast. Do not exceed text-6xl ceiling for headings."
+  },
+  "colors": {
+    "canvas_background": "#FAF8F5",
+    "surface_white": "#FFFFFF",
+    "surface_warm": "#F4F0EA",
+    "surface_hover": "#EFEAE1",
+    "text_primary": "#1C1917",
+    "text_secondary": "#57534E",
+    "text_muted": "#78716C",
+    "primary_accent": "#4338CA",
+    "primary_accent_hover": "#3730A3",
+    "primary_accent_light": "#EEF2FF",
+    "secondary_accent_teal": "#0D9488",
+    "secondary_accent_amber": "#D97706",
+    "border_light": "#E7E5E4",
+    "border_subtle": "#F5F5F4",
+    "fit_labels": {
+      "high_fit": {
+        "bg": "#ECFDF5",
+        "text": "#047857",
+        "border": "#A7F3D0"
+      },
+      "medium_fit": {
+        "bg": "#FFFBEB",
+        "text": "#B45309",
+        "border": "#FDE68A"
+      },
+      "low_fit": {
+        "bg": "#F1F5F9",
+        "text": "#475569",
+        "border": "#CBD5E1"
+      }
+    },
+    "forbidden_colors": ["#7351B7", "#1B93A4", "pure black #000000 without tint"]
+  },
+  "layout_and_spacing": {
+    "border_radius": "rounded-xl to rounded-2xl (consistent and moderate)",
+    "spacing_philosophy": "Generous 2-3x padding (p-6, p-8, p-12) to ensure high scanability for busy users",
+    "touch_targets": "Minimum 48px height (h-12 or h-14) for all buttons and interactive choices",
+    "mobile_rules": "Mobile-first responsive (360px to 1440px+). All tables collapse to stacked card lists on viewports under 768px.",
+    "bento_grid": "Asymmetric grids with clear hierarchy: 1 primary hero box + 2 supporting context cards"
+  },
+  "components_and_screens": {
+    "landing": {
+      "route": "/",
+      "elements": [
+        "Header with logo, nav links (Marketplace, How It Works, Demo, Pricing), and 'Find My AI Tools' CTA button",
+        "Confident Hero section with high-impact headline, 1-line plain language value proposition, and interactive HTML/SVG tool fit preview card",
+        "Trust signals bar with real business types (Salons, HVAC, Restaurants, Cleaners) and clear outcome metrics",
+        "10-category SMB AI tools grid preview with tool counts and hours saved",
+        "Interactive 'How Idea Foundry Works' 3-step visualization",
+        "Start Free Evaluation CTA banner leading to /start"
+      ]
+    },
+    "questionnaire": {
+      "route": "/start",
+      "design": "One question per screen, 10-step wizard",
+      "elements": [
+        "Step indicator progress bar (1 to 10) with clear plain text step titles",
+        "Large touch-friendly option buttons with descriptive icons and plain verbs",
+        "Back button and Skip/Next actions",
+        "Live estimated time remaining indicator (e.g., '2 mins left')"
+      ]
+    },
+    "auth_and_onboarding": {
+      "login_route": "/login",
+      "onboarding_route": "/onboarding",
+      "elements": [
+        "Google Sign-In simulated auth button with standard branding",
+        "Onboarding form fields: Full Name, Business Name, City/ZIP code, Optional Phone",
+        "Two explicitly UNTICKED consent checkboxes for data privacy and update alerts",
+        "Submit action: 'Complete Profile & View Recommendations'"
+      ]
+    },
+    "dashboard": {
+      "route": "/dashboard",
+      "elements": [
+        "Top 3 Recommendation Cards featuring: Fit label (Great Match, Good Fit, Evaluation Needed), One-line core reason, Why it fits box, Not for alert, Check first prerequisite, Price in $/mo or 'Not listed', Works with integrations, Hours-saved range (labeled 'rough estimate'), Unknowns callout box, Action buttons (Save, Compare, Set It Up)",
+        "Fit x Trust Custom SVG Quadrant Chart plotting evaluated tools on Match Quality vs Proof & Trust axes with clickable dots",
+        "Expandable 'Why these three?' methodology drawer/modal",
+        "Fallback alert banner when fewer than 3 tools meet minimum criteria"
+      ]
+    },
+    "demo": {
+      "route": "/demo and /demo/:slug",
+      "design": "Clearly labeled pre-populated sample datasets for Salon, Restaurant, Plumber",
+      "elements": [
+        "Interactive business type selector (Salon & Spa, Restaurant & Café, Plumbing & HVAC)",
+        "Pre-loaded business profile header with simulated recommendation output",
+        "Interactive trial tool sandbox preview"
+      ]
+    },
+    "marketplace": {
+      "route": "/tools",
+      "elements": [
+        "Search input bar with instant keyword matching",
+        "10 Category chips (Customer Service, Scheduling, Marketing, Invoicing, Inventory, Lead Capture, Reviews, Operations, HR, Phone AI)",
+        "Filter bar: Price range, Free trial available, Works-with integration selector",
+        "Sort dropdown: Best Fit, Most Proven, Lowest Price, Highest Time Saved",
+        "Tool card grid with badges, price tags, hours saved, and 'View Breakdown' CTA",
+        "Show More / Pagination controls"
+      ]
+    },
+    "tool_detail": {
+      "route": "/tools/:slug",
+      "elements": [
+        "Summary banner with plain language value pitch",
+        "Pricing breakdown in plain words (e.g., '$29/mo after 14-day free trial') plus 'Not listed' badge if hidden",
+        "Feature list with explicit 'Estimated' tags for AI-inferred capabilities",
+        "'How We Checked This Tool' verification box",
+        "User reviews & verifications list",
+        "Source citations with explicit marker: 'Written by the company or a competitor' vs independent evidence",
+        "Unknowns box listing missing information",
+        "SMB-Fit Warning box (e.g., 'Built for bigger businesses (50+ staff)') when applicable",
+        "Last-checked date stamp and public comments (first name only)"
+      ]
+    },
+    "compare": {
+      "route": "/compare",
+      "elements": [
+        "Side-by-side comparison matrix for 2 to 3 selected tools",
+        "Visual difference highlighting on key attributes (pricing, setup complexity, integrations, hours saved)",
+        "Plain-language Tradeoff Summary box explaining key compromises"
+      ]
+    },
+    "setup_guide": {
+      "route": "/guide/:slug",
+      "elements": [
+        "Six fixed heading sections: 1. Preparation & Requirements, 2. Account Setup, 3. Integration & Sync, 4. First Test Run, 5. Staff Onboarding, 6. Maintenance & Safety",
+        "Interactive step-by-step completion checkboxes with persistence",
+        "'Was this guide helpful?' thumbs up/down feedback widget",
+        "AI Disclaimer banner: 'AI-generated setup assistance. Always double-check credentials and payment terms.'"
+      ]
+    },
+    "floating_chat": {
+      "elements": [
+        "Persistent grounded chat helper icon at bottom-right of all screens",
+        "Expandable conversation window with quick suggestion pills (e.g., 'What AI is best for a small salon?', 'How do I connect Square?')",
+        "Plain English responses tailored for busy non-technical business owners"
+      ]
+    },
+    "my_tools": {
+      "route": "/me",
+      "elements": [
+        "Saved tools tabbed by status: Considering, Currently Using, Dropped",
+        "Activity & notifications feed regarding tool pricing changes or status updates"
+      ]
+    },
+    "settings": {
+      "route": "/me/settings",
+      "elements": [
+        "Business profile updates, location details, notification preferences"
+      ]
+    },
+    "provider_submission": {
+      "route": "/providers/new",
+      "elements": [
+        "Tool submission form for AI vendors (Tool Name, Target Business Types, Pricing Model, Integrations, Verification Link)"
+      ]
+    },
+    "admin": {
+      "routes": ["/admin", "/admin/llm"],
+      "elements": [
+        "Tool approval queue with Approve/Reject actions",
+        "Demo action button: 'Add a better tool and run alerts'",
+        "LLM Spend Dashboard: Today's spend, spend by task breakdown, cache hit rate metric, fallbacks counter, budget guard indicator"
+      ]
+    }
+  },
+  "image_urls": {
+    "avatars": [
+      {
+        "url": "https://images.unsplash.com/photo-1599566150163-29194dcaad36?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwxfHxzbWFsbCUyMGJ1c2luZXNzJTIwb3duZXIlMjBhdmF0YXIlMjBwb3J0cmFpdHxlbnwwfHx8fDE3OTQxMTAzNjV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Small Business Owner - Salon Founder",
+        "use_case": "Testimonial / Reviewer Avatar"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwyfHxzbWFsbCUyMGJ1c2luZXNzJTIwb3duZXIlMjBhdmF0YXIlMjBwb3J0cmFpdHxlbnwwfHx8fDE3OTQxMTAzNjV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Café Owner Avatar",
+        "use_case": "User Profile / Reviewer Avatar"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1599566147214-ce487862ea4f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwzfHxzbWFsbCUyMGJ1c2luZXNzJTIwb3duZXIlMjBhdmF0YXIlMjBwb3J0cmFpdHxlbnwwfHx8fDE3OTQxMTAzNjV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Plumbing Contractor Avatar",
+        "use_case": "User Profile / Reviewer Avatar"
+      }
+    ],
+    "app_illustrations": [
+      {
+        "url": "https://images.unsplash.com/photo-1758626056863-9191d5cef12e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2ODl8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBzb2Z0d2FyZSUyMGNvbXBhbnklMjBsb2dvJTIwaWNvbnxlbnwwfHx8fDE3OTQxMTAzNjV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Mobile App Screen Mockup",
+        "use_case": "Hero UI Preview / Tool Demo Visual"
+      }
+    ]
+  },
+  "universal_guidelines": [
+    "You have .js files (JavaScript / React standard JSX with Vite). Ensure all component code uses .js or .jsx extensions.",
+    "CRITICAL: Add explicit data-testid attributes to all interactive elements, buttons, inputs, filter options, cards, navigation links, and key indicators (e.g. data-testid='start-questionnaire-button', data-testid='recommendation-card-1', data-testid='fit-trust-quadrant-chart').",
+    "Header must have a solid or semi-solid glassmorphism background (backdrop-blur-md bg-stone-50/90 or bg-white/90). DO NOT use completely transparent header background.",
+    "Never show raw decimal scores like '0.87' or '8.4/10'. Convert scores into plain English terms: 'Great match', 'Good fit', 'Moderate fit', 'High trust', 'Verified by 12 SMBs'.",
+    "Pricing must be presented in clear dollars per month ($/mo) or 'Not listed' if unavailable.",
+    "Time savings must be shown as realistic ranges (e.g. '3 - 6 hrs/week') labeled clearly as 'rough estimate'.",
+    "Every tool detail page must include an 'Unknowns' box when information is missing or inferred.",
+    "All tables on mobile screens must collapse into vertical stacked cards for readability on small devices."
+  ]
+}
