@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, Bookmark, Settings, Shield, Store, MoonStar, SunMedium } from 'lucide-react';
+import { Menu, X, LogOut, Bookmark, Settings, Shield, MoonStar, SunMedium } from 'lucide-react';
 import { useAuth, startLogin } from '@/lib/auth';
 
 export const Logo = () => (
@@ -103,7 +103,7 @@ export function Footer() {
         </div>
         <div className="space-y-2 text-sm">
           <p className="if-eyebrow">Explore</p>
-          <Link to="/tools" className="block text-[var(--ink-2)] hover:text-[var(--ink)]" data-testid="footer-marketplace-link"><Store className="mr-1 inline h-4 w-4" />Marketplace</Link>
+          <Link to="/tools" className="block text-[var(--ink-2)] hover:text-[var(--ink)]" data-testid="footer-marketplace-link">Marketplace</Link>
           <Link to="/demo" className="block text-[var(--ink-2)] hover:text-[var(--ink)]">Sample businesses</Link>
           <Link to="/providers/new" className="block text-[var(--ink-2)] hover:text-[var(--ink)]" data-testid="footer-provider-link">List your tool</Link>
         </div>

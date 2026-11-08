@@ -180,7 +180,6 @@ export default function Landing() {
         <span className="if-blob if-blob-c right-[-6rem] top-[-4rem] h-[20rem] w-[20rem]" aria-hidden="true" />
         <div className="if-container relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="max-w-xl">
-            <p className="if-eyebrow if-rise">For salons, cafés, trades and shops</p>
             <h1 className="if-rise if-d1 mt-4 text-[clamp(2.7rem,5.6vw,4.9rem)]">Find the right AI tool for your business</h1>
             <p className="if-rise if-d2 mt-5 max-w-lg text-[1.15rem] leading-relaxed text-[var(--ink-2)]">Answer a few easy questions. We’ll suggest up to three tools that fit your budget — and show you how to set them up.</p>
             <div className="if-rise if-d3 mt-8 grid grid-cols-1 gap-3 min-[420px]:flex min-[420px]:flex-wrap min-[420px]:items-center">
